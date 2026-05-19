@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 const fadeIn = {
@@ -10,6 +11,50 @@ const fadeIn = {
 export function AgencyHero() {
   const reduceMotion = useReducedMotion();
   const initial = reduceMotion ? "visible" : "hidden";
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+
+  // Keep the idle motion restrained on smaller screens without changing layout.
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateViewport = () => setIsMobileViewport(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener("change", updateViewport);
+
+    return () => mediaQuery.removeEventListener("change", updateViewport);
+  }, []);
+
+  // Keep the logo moving in a calm orbit-like loop instead of a single up/down motion.
+  const logoIdleAnimation = reduceMotion
+    ? undefined
+    : {
+        x: isMobileViewport ? [0, 2, -1, 0] : [0, 5, -3, 0],
+        y: isMobileViewport ? [0, -4, -2, 0] : [0, -10, -4, 0],
+        rotate: isMobileViewport ? [0, 0.45, -0.35, 0] : [0, 0.85, -0.65, 0],
+        scale: isMobileViewport ? [1, 1.012, 1.005, 1] : [1, 1.022, 1.01, 1],
+        filter: isMobileViewport
+          ? [
+              "drop-shadow(0 20px 28px rgba(78, 34, 174, 0.08)) drop-shadow(0 0 14px rgba(112, 72, 255, 0.08))",
+              "drop-shadow(0 28px 44px rgba(78, 34, 174, 0.16)) drop-shadow(0 0 28px rgba(112, 72, 255, 0.16))",
+              "drop-shadow(0 24px 36px rgba(57, 118, 255, 0.12)) drop-shadow(0 0 18px rgba(71, 191, 255, 0.14))",
+              "drop-shadow(0 20px 28px rgba(78, 34, 174, 0.08)) drop-shadow(0 0 14px rgba(112, 72, 255, 0.08))",
+            ]
+          : [
+              "drop-shadow(0 26px 40px rgba(78, 34, 174, 0.1)) drop-shadow(0 0 18px rgba(112, 72, 255, 0.1))",
+              "drop-shadow(0 40px 64px rgba(78, 34, 174, 0.2)) drop-shadow(0 0 36px rgba(112, 72, 255, 0.2))",
+              "drop-shadow(0 34px 54px rgba(57, 118, 255, 0.16)) drop-shadow(0 0 28px rgba(71, 191, 255, 0.18))",
+              "drop-shadow(0 26px 40px rgba(78, 34, 174, 0.1)) drop-shadow(0 0 18px rgba(112, 72, 255, 0.1))",
+            ],
+      };
+
+  const logoGlowAnimation = reduceMotion
+    ? undefined
+    : {
+        opacity: isMobileViewport ? [0.28, 0.46, 0.34, 0.28] : [0.34, 0.56, 0.42, 0.34],
+        scale: isMobileViewport ? [0.96, 1.04, 1, 0.96] : [0.94, 1.08, 1.01, 0.94],
+        x: isMobileViewport ? [0, 1, -1, 0] : [0, 3, -2, 0],
+        y: isMobileViewport ? [0, -2, -1, 0] : [0, -6, -2, 0],
+      };
 
   return (
     <section
@@ -51,15 +96,43 @@ export function AgencyHero() {
         <motion.div
           className="agency-hero-visual relative z-0 mx-auto h-[44vh] min-h-[360px] w-full max-w-[720px] lg:ml-[1.375rem] lg:mr-[-1.375rem] lg:mt-4 lg:h-[66vh] lg:min-h-[460px] lg:max-h-[520px]"
           initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 28 }}
-          animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
           aria-hidden="true"
         >
-          <img
-            className="mx-auto h-full w-full object-contain"
-            src="/favicon.svg"
-            alt=""
-          />
+          <motion.div
+            className="relative mx-auto flex h-full w-full items-center justify-center"
+            animate={logoIdleAnimation}
+            transition={{
+              duration: isMobileViewport ? 7.2 : 8.4,
+              ease: "easeInOut",
+              repeat: reduceMotion ? 0 : Infinity,
+            }}
+            style={{
+              willChange: reduceMotion ? "auto" : "transform, filter",
+            }}
+          >
+            <motion.div
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[56%] w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+              animate={logoGlowAnimation}
+              transition={{
+                duration: isMobileViewport ? 7 : 8.1,
+                ease: "easeInOut",
+                repeat: reduceMotion ? 0 : Infinity,
+              }}
+              style={{
+                background:
+                  "radial-gradient(circle, rgba(134,59,255,0.3) 0%, rgba(126,20,255,0.18) 38%, rgba(71,191,255,0.14) 62%, rgba(71,191,255,0) 100%)",
+                filter: reduceMotion ? "blur(38px)" : "blur(46px)",
+                willChange: reduceMotion ? "auto" : "transform, opacity",
+              }}
+            />
+            <img
+              className="relative z-10 mx-auto h-full w-full object-contain"
+              src="/favicon.svg"
+              alt=""
+            />
+          </motion.div>
         </motion.div>
       </div>
     </section>
