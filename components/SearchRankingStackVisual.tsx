@@ -52,16 +52,17 @@ const BASE_RESULTS: ResultItem[] = [
   },
   {
     id: "your-site",
-    company: "IHRE WEBSEITE",
+    company: "Ihre Webseite",
     title:
-      "IHRE WEBSEITE | Exklusive Vermarktung, starke Präsentation und persönliche Beratung",
+      "Ihre Webseite | Exklusive Vermarktung, starke Präsentation und persönliche Beratung",
     url: "https://ihre-webseite.de",
     desc: "Exklusive Immobilienvermarktung für Bremen und Umgebung: hochwertige Objektpräsentation, geprüfte Interessenten, fundierte Marktkenntnis und persönliche Begleitung bis zum Notartermin.",
     rating: "5,0",
     reviews: "247 Google-Bewertungen",
     proof: "Top bewertet • Exklusive Objekte • Persönliche Begleitung",
     links: ["Immobilie verkaufen", "Referenzen", "Kostenlose Wertermittlung"],
-    hint: "So könnte Ihre Website aussehen",
+    hint:
+      "Webseiten, die bei Google weiter oben stehen, bekommen deutlich mehr Klicks",
     image: "/real-estate-preview.svg",
     featured: true,
   },
@@ -93,6 +94,9 @@ function SearchResult({
   topReached: boolean;
 }) {
   const displayUrl = item.url.replace("https://", "");
+  const isFeatured = Boolean(item.featured);
+  const featuredTitleRest =
+    "Exklusive Vermarktung, starke Präsentation und persönliche Beratung";
 
   return (
     <motion.article
@@ -117,7 +121,13 @@ function SearchResult({
           </div>
 
           <div className="company-meta">
-            <div className="company-name">{item.company}</div>
+            <div className="company-name">
+              {isFeatured ? (
+                <span className="premium-term-highlight">{item.company}</span>
+              ) : (
+                item.company
+              )}
+            </div>
             <div className="company-url">{displayUrl}</div>
           </div>
         </div>
@@ -130,7 +140,19 @@ function SearchResult({
           {item.hint && <div className="result-intent-note">{item.hint}</div>}
 
           <div className="result-title-row">
-            <h3 className="result-title">{item.title}</h3>
+            <h3 className="result-title">
+              {isFeatured ? (
+                <>
+                  <span className="premium-term-highlight">
+                    {item.company}
+                  </span>
+                  {" | "}
+                  {featuredTitleRest}
+                </>
+              ) : (
+                item.title
+              )}
+            </h3>
           </div>
 
           <p className="result-desc">{item.desc}</p>
