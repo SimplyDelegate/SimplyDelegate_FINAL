@@ -7,29 +7,13 @@ import { AgencyButton } from "@/components/ui/agency-button";
 import { registerScrollTrigger, shouldReduceMotion } from "@/lib/animations";
 
 const ctaHref = "/kontakt";
-const evidence = [
-  "Lokaler Kontext",
-  "Klare Entitäten",
-  "Vertrauenssignale",
-  "Strukturierte Inhalte",
-];
 
 export function AiVisibilitySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const promptRef = useRef<HTMLDivElement>(null);
-  const promptTextRef = useRef<HTMLSpanElement>(null);
-  const sendRef = useRef<HTMLSpanElement>(null);
-  const submittedRef = useRef<HTMLDivElement>(null);
-  const answerRef = useRef<HTMLDivElement>(null);
-  const answerLineRefs = useRef<HTMLSpanElement[]>([]);
-  const firmRef = useRef<HTMLSpanElement>(null);
-  const paragraphRef = useRef<HTMLParagraphElement>(null);
-  const supportRef = useRef<HTMLParagraphElement>(null);
-  const chipRefs = useRef<HTMLSpanElement[]>([]);
-  const disclaimerRef = useRef<HTMLParagraphElement>(null);
+  const shellRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -38,77 +22,25 @@ export function AiVisibilitySection() {
     const pin = pinRef.current;
     const copy = copyRef.current;
     const stage = stageRef.current;
-    const prompt = promptRef.current;
-    const promptText = promptTextRef.current;
-    const send = sendRef.current;
-    const submitted = submittedRef.current;
-    const answer = answerRef.current;
-    const firm = firmRef.current;
-    const paragraph = paragraphRef.current;
-    const support = supportRef.current;
-    const disclaimer = disclaimerRef.current;
+    const shell = shellRef.current;
     const cta = ctaRef.current;
-    const lines = answerLineRefs.current.filter(Boolean);
-    const chips = chipRefs.current.filter(Boolean);
 
-    if (
-      !ScrollTrigger ||
-      !section ||
-      !pin ||
-      !copy ||
-      !stage ||
-      !prompt ||
-      !promptText ||
-      !send ||
-      !submitted ||
-      !answer ||
-      !firm ||
-      !paragraph ||
-      !support ||
-      !disclaimer ||
-      !cta
-    ) {
+    if (!ScrollTrigger || !section || !pin || !copy || !stage || !shell || !cta) {
       return;
     }
 
     const ctx = gsap.context(() => {
       if (shouldReduceMotion()) {
-        gsap.set(
-          [
-            copy,
-            stage,
-            prompt,
-            promptText,
-            send,
-            submitted,
-            answer,
-            firm,
-            paragraph,
-            support,
-            disclaimer,
-            cta,
-          ],
-          { opacity: 1, y: 0, scale: 1 },
-        );
-        gsap.set(lines, { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 });
-        gsap.set(chips, { opacity: 1, y: 0 });
+        gsap.set([copy, stage, shell, cta], {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+        });
         return;
       }
 
-      gsap.set(stage, { opacity: 0.62, y: 54, scale: 0.985 });
-      gsap.set(prompt, { opacity: 0, y: 34, scale: 0.97 });
-      gsap.set(promptText, { clipPath: "inset(0% 100% 0% 0%)" });
-      gsap.set(send, { opacity: 0.45, scale: 0.72 });
-      gsap.set(submitted, { opacity: 0, y: 20, scale: 0.985 });
-      gsap.set(answer, { opacity: 0, y: 24 });
-      gsap.set(lines, {
-        clipPath: "inset(0% 100% 0% 0%)",
-        opacity: 0.25,
-      });
-      gsap.set(firm, { backgroundPosition: "100% 100%" });
-      gsap.set([paragraph, support], { opacity: 0, y: 16 });
-      gsap.set(chips, { opacity: 0, y: 16 });
-      gsap.set(disclaimer, { opacity: 0, y: 10 });
+      gsap.set(stage, { opacity: 0 });
+      gsap.set(shell, { y: 54, scale: 0.985 });
       gsap.set(cta, { opacity: 1, y: 0 });
 
       const timeline = gsap.timeline({
@@ -127,119 +59,19 @@ export function AiVisibilitySection() {
       timeline
         .to(stage, {
           opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.58,
-          ease: "power3.out",
+          duration: 0.2,
+          ease: "power2.out",
         })
         .to(
-          prompt,
+          shell,
           {
-            opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.54,
+            duration: 0.15,
             ease: "power3.out",
           },
-          "<0.08",
-        )
-        .to(promptText, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: 0.72,
-          ease: "none",
-        })
-        .to(
-          send,
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 0.24,
-            ease: "power2.out",
-          },
-          ">-0.04",
-        )
-        .to(prompt, {
-          y: -22,
-          scale: 0.985,
-          duration: 0.42,
-          ease: "power2.inOut",
-        })
-        .to(
-          submitted,
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.38,
-            ease: "power2.out",
-          },
-          "<0.08",
-        )
-        .to(answer, {
-          opacity: 1,
-          y: 0,
-          duration: 0.42,
-          ease: "power2.out",
-        })
-        .to(lines, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          opacity: 1,
-          duration: 0.72,
-          stagger: 0.13,
-          ease: "none",
-        })
-        .to(
-          firm,
-          {
-            backgroundPosition: "0% 100%",
-            duration: 0.42,
-            ease: "power2.out",
-          },
-          ">-0.14",
-        )
-        .to(paragraph, {
-          opacity: 1,
-          y: 0,
-          duration: 0.42,
-          ease: "power2.out",
-        })
-        .to(
-          support,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.38,
-            ease: "power2.out",
-          },
-          "<0.12",
-        )
-        .to(
-          chips,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.36,
-            stagger: 0.055,
-            ease: "power2.out",
-          },
-          "<0.14",
-        )
-        .to(
-          [disclaimer, cta],
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.42,
-            stagger: 0.08,
-            ease: "power2.out",
-          },
-          ">-0.02",
-        )
-        .to(stage, {
-          y: -12,
-          duration: 0.5,
-          ease: "power1.inOut",
-        });
+          0.2,
+        );
     }, section);
 
     return () => ctx.revert();
@@ -275,83 +107,20 @@ export function AiVisibilitySection() {
 
         <div
           ref={stageRef}
-          className="ai-stage absolute left-4 right-4 top-[48vh] z-10 mx-auto max-w-[920px] sm:left-8 sm:right-8 lg:left-auto lg:right-[7vw] lg:top-[13vh] lg:w-[58vw] lg:max-w-[920px]"
+          className="ai-stage absolute left-4 right-4 top-[55vh] z-10 mx-auto w-auto max-w-[1120px] sm:left-8 sm:right-8 lg:left-auto lg:right-[7vw] lg:top-1/2 lg:mx-0 lg:w-[52vw] lg:max-w-[860px] lg:-translate-y-1/2"
         >
-          <div ref={promptRef} className="ai-prompt">
-            <span className="ai-prompt-mark" aria-hidden="true" />
-            <span
-              ref={promptTextRef}
-              className="min-w-0 flex-1 truncate text-[#171922]"
-            >
-              Gute Immobilienmakler in Bremen
-            </span>
-            <span ref={sendRef} className="ai-send" aria-hidden="true">
-              <span />
-            </span>
-          </div>
-
-          <div ref={submittedRef} className="ai-submitted">
-            <span>Gute Immobilienmakler in Bremen</span>
-          </div>
-
-          <div ref={answerRef} className="ai-response" aria-label="KI-Antwort">
-            <div className="mb-5 flex items-center gap-3 text-xs font-medium uppercase text-[#727680]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#547ba3]" />
-              Generierte Antwort
+          <div ref={shellRef} className="demo-shell ai-demo-shell">
+            <div className="browser-chrome ai-demo-chrome">
+              <div className="browser-toolbar ai-demo-toolbar">
+                <div className="browser-dots" aria-hidden="true">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <span className="mockup-note">BEISPIELHAFTE DARSTELLUNG</span>
+              </div>
             </div>
-
-            <h3 className="text-[1.45rem] font-medium leading-tight text-[#07080f] sm:text-[1.85rem]">
-              <span
-                ref={(node) => {
-                  if (node) answerLineRefs.current[0] = node;
-                }}
-                className="ai-answer-line"
-              >
-                Empfehlung:{" "}
-                <span ref={firmRef} className="ai-firm-name">
-                  Ihre Firma
-                </span>
-              </span>
-            </h3>
-
-            <p
-              ref={paragraphRef}
-              className="mt-5 max-w-[48rem] text-base leading-7 text-[#4f535e] sm:text-lg sm:leading-8"
-            >
-              Die Firma erscheint als relevante Option, weil der digitale
-              Auftritt lokal ausgerichtet ist, klare Leistungsbereiche zeigt
-              und Vertrauen über Inhalte, Struktur und Signale aufbaut.
-            </p>
-
-            <p
-              ref={supportRef}
-              className="mt-6 max-w-[46rem] text-sm leading-6 text-[#656974] sm:text-base"
-            >
-              Relevant durch lokale Inhalte, klare Entitäten,
-              Vertrauenssignale und eine strukturierte Website.
-            </p>
-
-            <div className="mt-6 flex max-w-[48rem] flex-wrap gap-3">
-              {evidence.map((item, index) => (
-                <span
-                  key={item}
-                  ref={(node) => {
-                    if (node) chipRefs.current[index] = node;
-                  }}
-                  className="ai-evidence-chip"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-
-            <p
-              ref={disclaimerRef}
-              className="mt-7 max-w-[35rem] text-xs leading-5 text-[#7c808a]"
-            >
-              Illustrative Simulation – keine Garantie für Empfehlungen in
-              KI-Systemen.
-            </p>
+            <div className="ai-demo-body" aria-hidden="true" />
           </div>
         </div>
       </div>

@@ -1015,6 +1015,82 @@ body {
   text-wrap: balance;
 }
 
+.ai-demo-shell {
+  display: flex;
+  min-height: 670px;
+  flex-direction: column;
+}
+
+.ai-demo-chrome {
+  min-height: 122px;
+}
+
+.ai-demo-toolbar {
+  grid-template-columns: auto 1fr auto;
+}
+
+.ai-demo-body {
+  flex: 1;
+  background: #1b1b1b;
+}
+
+.ai-demo-content {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  background: #1b1b1b;
+  padding: 12px 16px;
+}
+
+.ai-demo-content .ai-prompt {
+  min-height: 58px;
+  border-radius: 18px;
+  padding: 0 0.95rem 0 1.05rem;
+  font-size: clamp(0.98rem, 1.2vw, 1.12rem);
+}
+
+.ai-demo-content .ai-send {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 13px;
+}
+
+.ai-demo-content .ai-submitted {
+  margin-top: 0.82rem;
+}
+
+.ai-demo-content .ai-submitted span {
+  border-radius: 16px;
+  padding: 0.68rem 0.82rem;
+  font-size: 0.82rem;
+}
+
+.ai-demo-content .ai-response {
+  margin-top: 0.82rem;
+  min-height: 0;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: clamp(0.88rem, 1.45vw, 1.08rem);
+}
+
+.ai-demo-content .ai-response h3 {
+  font-size: clamp(1.15rem, 1.65vw, 1.48rem);
+}
+
+.ai-demo-content .ai-response p {
+  font-size: 0.88rem;
+  line-height: 1.48;
+}
+
+.ai-demo-content .ai-evidence-chip {
+  min-height: 2rem;
+  padding: 0 0.72rem;
+  font-size: 0.76rem;
+}
+
 .ai-prompt {
   display: flex;
   align-items: center;
@@ -1372,6 +1448,34 @@ body {
 
 .serp-demo-stage {
   will-change: transform;
+}
+
+.serp-demo-stage.is-reveal-complete {
+  opacity: 1 !important;
+}
+
+.serp-demo-stage.is-reveal-complete .demo-shell,
+.serp-demo-stage.is-reveal-complete .searchbar,
+.serp-demo-stage.is-reveal-complete .animation-toggle,
+.serp-demo-stage.is-reveal-complete .results-meta,
+.serp-demo-stage.is-reveal-complete .results-viewport,
+.serp-demo-stage.is-reveal-complete .results-list,
+.serp-demo-stage.is-reveal-complete .browser-dots,
+.serp-demo-stage.is-reveal-complete .mockup-note {
+  opacity: 1 !important;
+}
+
+.serp-demo-stage.is-reveal-complete .demo-shell,
+.serp-demo-stage.is-reveal-complete .searchbar,
+.serp-demo-stage.is-reveal-complete .animation-toggle,
+.serp-demo-stage.is-reveal-complete .results-meta,
+.serp-demo-stage.is-reveal-complete .results-viewport,
+.serp-demo-stage.is-reveal-complete .results-list {
+  transform: translate3d(0, 0, 0) scale(1) !important;
+}
+
+.serp-demo-stage.is-reveal-complete .search-query {
+  clip-path: inset(0% 0% 0% 0%) !important;
 }
 
 .demo-shell {

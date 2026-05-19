@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 
 import { registerScrollTrigger, shouldReduceMotion } from "@/lib/animations";
@@ -71,6 +71,8 @@ const SWAP_INTERVAL = 1200;
 const PREPARE_DELAY = 700;
 const HOLD_TOP_DELAY = 3600;
 const RESTART_DELAY = 1300;
+const REVEAL_COMPLETE_PROGRESS = 0.62;
+const PIN_RELEASE_PROGRESS = 0.82;
 
 function swapFeaturedOneStepUp(items: ResultItem[]) {
   const index = items.findIndex((item) => item.id === "your-site");
@@ -174,11 +176,13 @@ export function SearchRankingStackVisual() {
   const resultsViewportRef = useRef<HTMLDivElement>(null);
   const resultsListRef = useRef<HTMLDivElement>(null);
   const revealReadyRef = useRef(false);
-  const isInView = useInView(stageRef, { amount: 0.45 });
+  const hasRevealCompletedRef = useRef(false);
   const [results, setResults] = useState(BASE_RESULTS);
   const [topReached, setTopReached] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isRevealReady, setIsRevealReady] = useState(false);
+  const [hasRevealCompleted, setHasRevealCompleted] = useState(false);
+  const [isWindowVisible, setIsWindowVisible] = useState(false);
 
   useLayoutEffect(() => {
     const ScrollTrigger = registerScrollTrigger();
@@ -210,6 +214,10 @@ export function SearchRankingStackVisual() {
     }
 
     const setRevealReady = (ready: boolean) => {
+      if (!ready && hasRevealCompletedRef.current) {
+        ready = true;
+      }
+
       if (revealReadyRef.current === ready) return;
 
       revealReadyRef.current = ready;
@@ -230,6 +238,23 @@ export function SearchRankingStackVisual() {
       toolbar.querySelectorAll<HTMLElement>(".animation-toggle"),
     );
 
+    const setFinalRevealState = () => {
+      gsap.set(stage, { opacity: 1 });
+      gsap.set(shell, { y: 0, scale: 1 });
+      gsap.set(searchbar, { opacity: 1, y: 0, scale: 1 });
+      gsap.set(query, { clipPath: "inset(0% 0% 0% 0%)" });
+      gsap.set(
+        [
+          meta,
+          resultsViewport,
+          resultsList,
+          ...persistentChromeDetails,
+          ...delayedChromeDetails,
+        ],
+        { opacity: 1, y: 0 },
+      );
+    };
+
     const ctx = gsap.context(() => {
       if (shouldReduceMotion()) {
         gsap.set(
@@ -247,6 +272,8 @@ export function SearchRankingStackVisual() {
           { opacity: 1, y: 0, scale: 1, clearProps: "transform" },
         );
         gsap.set(query, { clipPath: "inset(0% 0% 0% 0%)" });
+        hasRevealCompletedRef.current = true;
+        setHasRevealCompleted(true);
         setRevealReady(true);
         return;
       }
@@ -262,7 +289,49 @@ export function SearchRankingStackVisual() {
       gsap.set(resultsList, { opacity: 0, y: 18 });
       setRevealReady(false);
 
-      const timeline = gsap.timeline({
+      let timeline: ReturnType<typeof gsap.timeline> | null = null;
+      let completedScrollTrigger:
+        | InstanceType<typeof ScrollTrigger>
+        | null = null;
+
+      const completeReveal = (
+        scrollTrigger?: InstanceType<typeof ScrollTrigger>,
+      ) => {
+        if (!hasRevealCompletedRef.current) {
+          setHasRevealCompleted(true);
+        }
+
+        hasRevealCompletedRef.current = true;
+        completedScrollTrigger = scrollTrigger ?? completedScrollTrigger;
+        timeline?.progress(1).pause();
+        setFinalRevealState();
+        setRevealReady(true);
+      };
+
+      const removeCompletedPin = () => {
+        if (!completedScrollTrigger) return;
+
+        const trigger = completedScrollTrigger;
+        completedScrollTrigger = null;
+        trigger.kill(true, true);
+        setFinalRevealState();
+        setRevealReady(true);
+
+        const keepSeoSectionInView = () => {
+          window.scrollTo({
+            top: section.offsetTop,
+            behavior: "auto",
+          });
+        };
+
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+          keepSeoSectionInView();
+          ScrollTrigger.update();
+        });
+      };
+
+      timeline = gsap.timeline({
         defaults: { ease: "power2.out" },
         scrollTrigger: {
           trigger: section,
@@ -273,9 +342,27 @@ export function SearchRankingStackVisual() {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            setRevealReady(self.progress >= 0.62);
+            if (
+              hasRevealCompletedRef.current ||
+              self.progress >= REVEAL_COMPLETE_PROGRESS
+            ) {
+              completeReveal(self);
+
+              if (self.progress >= PIN_RELEASE_PROGRESS) {
+                removeCompletedPin();
+              }
+
+              return;
+            }
+
+            setRevealReady(false);
           },
-          onLeaveBack: () => {
+          onLeaveBack: (self) => {
+            if (hasRevealCompletedRef.current) {
+              completeReveal(self);
+              return;
+            }
+
             setRevealReady(false);
           },
         },
@@ -321,7 +408,54 @@ export function SearchRankingStackVisual() {
   }, []);
 
   useEffect(() => {
-    if (!isRevealReady || !isInView || isPaused) return;
+    const shell = shellRef.current;
+
+    if (!shell) return;
+
+    let frameId = 0;
+
+    const updateVisibility = () => {
+      const rect = shell.getBoundingClientRect();
+      const isVisible =
+        rect.bottom > 0 &&
+        rect.top < window.innerHeight &&
+        rect.right > 0 &&
+        rect.left < window.innerWidth;
+
+      setIsWindowVisible(isVisible);
+    };
+
+    const scheduleUpdate = () => {
+      if (frameId) return;
+
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0;
+        updateVisibility();
+      });
+    };
+
+    const observer = new IntersectionObserver(scheduleUpdate, {
+      threshold: 0,
+    });
+
+    observer.observe(shell);
+    updateVisibility();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+
+      if (frameId) {
+        window.cancelAnimationFrame(frameId);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isRevealReady || !isWindowVisible || isPaused) return;
 
     const currentIndex = results.findIndex((item) => item.id === "your-site");
     if (currentIndex < 0) return;
@@ -353,12 +487,14 @@ export function SearchRankingStackVisual() {
     }, delay);
 
     return () => clearTimeout(timeoutId);
-  }, [isRevealReady, isInView, isPaused, results]);
+  }, [isRevealReady, isWindowVisible, isPaused, results]);
 
   return (
     <div
       ref={stageRef}
-      className="serp-demo-stage absolute left-4 right-4 top-[55vh] z-10 mx-auto w-auto max-w-[1120px] sm:left-8 sm:right-8 lg:left-auto lg:right-[7vw] lg:top-1/2 lg:mx-0 lg:w-[52vw] lg:max-w-[860px] lg:-translate-y-1/2"
+      className={`serp-demo-stage absolute left-4 right-4 top-[55vh] z-10 mx-auto w-auto max-w-[1120px] sm:left-8 sm:right-8 lg:left-auto lg:right-[7vw] lg:top-1/2 lg:mx-0 lg:w-[52vw] lg:max-w-[860px] lg:-translate-y-1/2 ${
+        hasRevealCompleted ? "is-reveal-complete" : ""
+      }`}
     >
       <div
         ref={shellRef}
