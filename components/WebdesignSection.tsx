@@ -3,10 +3,12 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 
+import { AgencyButton } from "@/components/ui/agency-button";
 import { registerScrollTrigger, shouldReduceMotion } from "@/lib/animations";
 
 const videoSrc =
   "/videos/u1187684669_httpss.mj.runkpWjapEvck4_0f13a8aa-de59-4074-b9b2-_424d8ffd-fc68-4c61-b565-fa0cf0fa2e4d_3%20(2).mp4";
+const ctaHref = "#kontakt";
 
 const VIDEO_REVEAL_PROGRESS = 0.18;
 const VIDEO_SCRUB_START_PROGRESS = 0.32;
@@ -51,6 +53,7 @@ export function WebdesignSection() {
   const stageRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
+  const hasStageRevealedRef = useRef(false);
 
   useLayoutEffect(() => {
     const ScrollTrigger = registerScrollTrigger();
@@ -97,17 +100,42 @@ export function WebdesignSection() {
     video.addEventListener("loadedmetadata", updateVideoDuration);
 
     const ctx = gsap.context(() => {
+      const setFinalStageState = () => {
+        gsap.set(stage, { opacity: 1, yPercent: -50, y: 0, scale: 1 });
+      };
+
       gsap.set(stage, { opacity: 0, yPercent: -50, y: 54, scale: 0.985 });
       gsap.set(copy, { opacity: 1, y: 0 });
 
       if (shouldReduceMotion()) {
-        gsap.set(stage, { opacity: 1, yPercent: -50, y: 0, scale: 1 });
+        hasStageRevealedRef.current = true;
+        setFinalStageState();
         gsap.set(copy, { opacity: 1, y: 0 });
         setVideoProgress(VIDEO_SCRUB_START_PROGRESS);
         return;
       }
 
-      const timeline = gsap.timeline({
+      let stageRevealTween: ReturnType<typeof gsap.to> | null = null;
+      let timeline: ReturnType<typeof gsap.timeline> | null = null;
+
+      const completeStageReveal = () => {
+        if (hasStageRevealedRef.current) {
+          setFinalStageState();
+          return;
+        }
+
+        hasStageRevealedRef.current = true;
+
+        if (stageRevealTween) {
+          timeline?.remove(stageRevealTween);
+          stageRevealTween.kill();
+          stageRevealTween = null;
+        }
+
+        setFinalStageState();
+      };
+
+      timeline = gsap.timeline({
         defaults: { ease: "power2.out" },
         scrollTrigger: {
           trigger: section,
@@ -119,6 +147,15 @@ export function WebdesignSection() {
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             setVideoProgress(self.progress);
+
+            if (hasStageRevealedRef.current) {
+              setFinalStageState();
+            }
+          },
+          onLeaveBack: () => {
+            if (hasStageRevealedRef.current) {
+              setFinalStageState();
+            }
           },
         },
       });
@@ -133,9 +170,14 @@ export function WebdesignSection() {
             scale: 1,
             duration: VIDEO_REVEAL_PROGRESS,
             ease: "power3.out",
+            onComplete: completeStageReveal,
           },
           0,
-        )
+        );
+
+      stageRevealTween = timeline.recent() as ReturnType<typeof gsap.to>;
+
+      timeline
         .to(
           copy,
           {
@@ -159,19 +201,47 @@ export function WebdesignSection() {
     <section
       id="webdesign"
       className="service-section service-section--webdesign relative overflow-hidden"
-      aria-label="Webdesign"
+      aria-labelledby="webdesign-heading"
     >
       <div ref={pinRef} className="webdesign-pin relative z-10 min-h-screen overflow-hidden">
-        <div className="webdesign-video-stage" ref={stageRef}>
-          <video
-            ref={videoRef}
-            className="webdesign-video"
-            src={videoSrc}
-            muted
-            playsInline
-            preload="metadata"
-          />
-          <div className="webdesign-showcase-overlay" aria-hidden="true">
+        <div className="pointer-events-none absolute left-4 top-8 z-20 max-w-[30rem] sm:left-8 sm:top-10 lg:inset-y-0 lg:left-[7vw] lg:top-0 lg:flex lg:w-[30rem] lg:max-w-none lg:items-center">
+          <div className="serp-copy">
+            <h2
+              id="webdesign-heading"
+              className="max-w-[15ch] text-[2.85rem] font-medium leading-[0.92] text-[#07080f] sm:text-[4rem] lg:text-[4.25rem] 2xl:text-[5.15rem]"
+            >
+              <span className="block whitespace-nowrap">Ihre</span>
+              <span className="block whitespace-nowrap">Website</span>
+              <span className="block whitespace-nowrap">entscheidet,</span>
+              <span className="block whitespace-nowrap">ob Sichtbarkeit</span>
+              <span className="block whitespace-nowrap">Umsatz wird</span>
+            </h2>
+            <div className="pointer-events-auto mt-8">
+              <AgencyButton
+                href={ctaHref}
+                className="border-black/10 bg-[#11131d] text-white shadow-[0_16px_34px_rgba(17,19,29,0.16)] hover:bg-[#222431]"
+              >
+                Auftritt bewerten lassen
+              </AgencyButton>
+            </div>
+          </div>
+        </div>
+
+        <div className="webdesign-stage-shell" ref={stageRef}>
+          <div className="webdesign-stage-note" aria-hidden="true">
+            So k&#246;nnte Ihre Webseite aussehen
+          </div>
+
+          <div className="webdesign-video-stage">
+            <video
+              ref={videoRef}
+              className="webdesign-video"
+              src={videoSrc}
+              muted
+              playsInline
+              preload="metadata"
+            />
+            <div className="webdesign-showcase-overlay" aria-hidden="true">
             <div className="webdesign-showcase-topbar">
               <div className="webdesign-showcase-brand">
                 <span className="webdesign-showcase-monogram">
@@ -185,7 +255,7 @@ export function WebdesignSection() {
               <div className="webdesign-showcase-nav">
                 <span>Leistungen</span>
                 <span>Projekte</span>
-                <span>Über uns</span>
+                <span>&#220;ber uns</span>
                 <span>Bewertungen</span>
                 <span>Kontakt</span>
               </div>
@@ -202,15 +272,18 @@ export function WebdesignSection() {
                   <path d="M12 21s6.5-5.35 6.5-11A6.5 6.5 0 0 0 5.5 10C5.5 15.65 12 21 12 21Z" />
                   <circle cx="12" cy="10" r="2.3" />
                 </svg>
-                <span>Für Bremen & Umgebung</span>
+                <span>F&#252;r Bremen &amp; Umgebung</span>
               </div>
               <h3>
-                <span>Räume, die</span>
+                <span>R&#228;ume, die</span>
                 <span>Eindruck machen.</span>
               </h3>
               <p>
                 <span>Wir planen und realisieren hochwertige Innenausbauten</span>
-                <span>und Renovierungen für Wohn- und Geschäftsräume – mit</span>
+                <span>
+                  und Renovierungen f&#252;r Wohn- und Gesch&#228;ftsr&#228;ume
+                  &nbsp;&ndash; mit
+                </span>
                 <span>klaren Angeboten, festen Ansprechpartnern und</span>
                 <span>sauberer Umsetzung.</span>
               </p>
@@ -298,6 +371,7 @@ export function WebdesignSection() {
                   <path d="M9 7h8v8" />
                 </svg>
               </span>
+            </div>
             </div>
           </div>
         </div>

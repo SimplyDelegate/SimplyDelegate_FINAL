@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 
 const navLinks = [
   { label: "Start", href: "#top" },
-  { label: "Google Sichtbarkeit", href: "#google-sichtbarkeit" },
-  { label: "KI Sichtbarkeit", href: "#ki-sichtbarkeit" },
+  { label: "Suchmaschinen-Sichtbarkeit", href: "#google-sichtbarkeit" },
+  { label: "KI-Sichtbarkeit", href: "#ki-sichtbarkeit" },
+  { label: "Webdesign", href: "#webdesign" },
 ];
 
 export function StickyNavbar() {

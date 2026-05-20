@@ -1006,12 +1006,17 @@ body {
   background: #f2f0f3;
 }
 
-.webdesign-video-stage {
+.webdesign-stage-shell {
   position: absolute;
   left: 1rem;
   right: 1rem;
   top: 50%;
   z-index: 10;
+  will-change: opacity, transform;
+}
+
+.webdesign-video-stage {
+  position: relative;
   aspect-ratio: 16 / 9;
   container-type: inline-size;
   overflow: hidden;
@@ -1021,7 +1026,6 @@ body {
   box-shadow:
     0 30px 80px rgba(51, 55, 69, 0.14),
     0 1px 0 rgba(255, 255, 255, 0.82) inset;
-  will-change: opacity, transform;
 }
 
 .webdesign-video {
@@ -1029,6 +1033,30 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.webdesign-stage-note {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  display: inline-flex;
+  width: fit-content;
+  min-height: 24px;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(calc(-100% - 1rem));
+  border: 1px solid rgba(244, 198, 119, 0.28);
+  border-radius: 999px;
+  background: rgba(244, 198, 119, 0.1);
+  padding: 0 10px;
+  color: #f5d89d;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+  will-change: opacity, transform;
 }
 
 .webdesign-showcase-overlay {
@@ -1143,12 +1171,13 @@ body {
   min-height: clamp(1rem, 2.35cqw, 1.4rem);
   align-items: center;
   gap: clamp(0.28rem, 0.72cqw, 0.42rem);
+  border: 1px solid rgba(74, 108, 190, 0.1);
   border-radius: 999px;
-  background: rgba(235, 239, 250, 0.74);
+  background: rgba(221, 229, 248, 0.42);
   padding: 0 clamp(0.48rem, 1.28cqw, 0.82rem);
-  color: #4b70c7;
+  color: rgba(60, 92, 170, 0.82);
   font-size: clamp(0.5rem, 1.36cqw, 0.78rem);
-  font-weight: 520;
+  font-weight: 500;
   line-height: 1;
   white-space: nowrap;
 }
@@ -1414,7 +1443,7 @@ body {
 }
 
 @media (min-width: 640px) {
-  .webdesign-video-stage {
+  .webdesign-stage-shell {
     left: auto;
     right: 2rem;
     width: min(86vw, 60rem);
@@ -1422,7 +1451,7 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .webdesign-video-stage {
+  .webdesign-stage-shell {
     right: 7vw;
     width: min(52vw, 860px);
   }
@@ -1467,6 +1496,10 @@ body {
   }
 
   .webdesign-showcase-form {
+    display: none;
+  }
+
+  .webdesign-stage-note {
     display: none;
   }
 }
