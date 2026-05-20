@@ -47,6 +47,10 @@ export function StickyNavbar() {
             <Image src="/favicon.svg" alt="" width={34} height={34} priority />
           </span>
           <span>SimplyDelegate</span>
+          <span className="site-nav__brand-divider" aria-hidden="true" />
+          <span className="site-nav__brand-qualifier">
+            Fachexpertise aus Norddeutschland
+          </span>
         </a>
 
         <div className="site-nav__links" aria-label="Seitennavigation">

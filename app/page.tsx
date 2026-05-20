@@ -3,6 +3,7 @@ import { AiVisibilitySection } from "@/components/AiVisibilitySection";
 import { ContactSection } from "@/components/ContactSection";
 import { GoogleRankingSection } from "@/components/GoogleRankingSection";
 import { StickyNavbar } from "@/components/StickyNavbar";
+import { WebdesignSection } from "@/components/WebdesignSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <AgencyHero />
         <GoogleRankingSection />
         <AiVisibilitySection />
+        <WebdesignSection />
         <ContactSection />
       </main>
     </>

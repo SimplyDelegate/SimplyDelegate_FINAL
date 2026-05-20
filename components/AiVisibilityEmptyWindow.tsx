@@ -19,8 +19,8 @@ const ANSWER_NOTE =
   "Nutzer klicken auf KI-Empfehlungen, weil sie der Vorauswahl vertrauen und Zeit sparen wollen";
 const ANSWER_SEGMENTS = ANSWER_TEXT.split(" ");
 
-const REVEAL_COMPLETE_PROGRESS = 0.98;
-const PIN_RELEASE_PROGRESS = 0.995;
+const REVEAL_COMPLETE_PROGRESS = 0.78;
+const PIN_RELEASE_PROGRESS = 0.98;
 
 export function AiVisibilityEmptyWindow() {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -333,7 +333,7 @@ export function AiVisibilityEmptyWindow() {
             duration: 0.08,
             ease: "power2.out",
           },
-          0.85,
+          0.68,
         )
         .to(
           note,
@@ -343,9 +343,9 @@ export function AiVisibilityEmptyWindow() {
             duration: 0.1,
             ease: "power2.out",
           },
-          0.9,
+          0.72,
         )
-        .to({}, { duration: 0.02 }, 0.98);
+        .to({}, { duration: 0.2 }, 0.78);
     }, stage);
 
     return () => ctx.revert();
