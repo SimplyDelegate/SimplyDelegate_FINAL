@@ -5,6 +5,14 @@ import gsap from "gsap";
 
 import { registerScrollTrigger, shouldReduceMotion } from "@/lib/animations";
 
+const SECTION_NAVIGATION_EVENT = "site:section-navigation";
+const SECTION_ID = "ki-sichtbarkeit";
+const SECTION_NAVIGATION_ORDER = [
+  "google-sichtbarkeit",
+  "ki-sichtbarkeit",
+  "webdesign",
+  "kontakt",
+];
 const CHAT_PROMPT = "Welche Baufirma in Bremerhaven ist gut?";
 const ANSWER_HEADING = "Empfehlung: IHRE FIRMA";
 const ANSWER_TEXT =
@@ -102,6 +110,8 @@ export function AiVisibilityEmptyWindow() {
       gsap.set([tags, note], { opacity: 1, y: 0 });
     };
 
+    let removeSectionNavigationListener: (() => void) | null = null;
+
     const ctx = gsap.context(() => {
       if (shouldReduceMotion()) {
         gsap.set(
@@ -160,6 +170,7 @@ export function AiVisibilityEmptyWindow() {
       let completedScrollTrigger:
         | InstanceType<typeof ScrollTrigger>
         | null = null;
+      let hasReleasedPin = false;
 
       const completeReveal = (
         scrollTrigger?: InstanceType<typeof ScrollTrigger>,
@@ -175,15 +186,29 @@ export function AiVisibilityEmptyWindow() {
         setFinalRevealState();
       };
 
-      const removeCompletedPin = () => {
-        if (!completedScrollTrigger) return;
+      const releaseCompletedPin = (keepSectionInView = true) => {
+        if (hasReleasedPin) return;
 
-        const trigger = completedScrollTrigger;
+        const trigger =
+          completedScrollTrigger ??
+          (
+            timeline as
+              | (ReturnType<typeof gsap.timeline> & {
+                  scrollTrigger?: InstanceType<typeof ScrollTrigger>;
+                })
+              | null
+          )?.scrollTrigger;
+
+        if (!trigger) return;
+
+        hasReleasedPin = true;
         completedScrollTrigger = null;
         trigger.kill(true, true);
         setFinalRevealState();
 
         const keepAiSectionInView = () => {
+          if (!keepSectionInView) return;
+
           window.scrollTo({
             top: section.offsetTop,
             behavior: "auto",
@@ -195,6 +220,41 @@ export function AiVisibilityEmptyWindow() {
           keepAiSectionInView();
           ScrollTrigger.update();
         });
+      };
+
+      const handleSectionNavigation = (event: Event) => {
+        const { targetId } = (event as CustomEvent<{ targetId?: string }>)
+          .detail ?? {};
+        const ownIndex = SECTION_NAVIGATION_ORDER.indexOf(SECTION_ID);
+        const targetIndex = SECTION_NAVIGATION_ORDER.indexOf(targetId ?? "");
+
+        if (targetIndex < ownIndex) {
+          return;
+        }
+
+        completeReveal();
+        releaseCompletedPin(false);
+
+        if (targetId === SECTION_ID) {
+          gsap.fromTo(
+            stage,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.32, ease: "power3.out" },
+          );
+          gsap.fromTo(
+            shell,
+            { y: 14 },
+            { y: 0, duration: 0.36, ease: "power3.out" },
+          );
+        }
+      };
+
+      window.addEventListener(SECTION_NAVIGATION_EVENT, handleSectionNavigation);
+      removeSectionNavigationListener = () => {
+        window.removeEventListener(
+          SECTION_NAVIGATION_EVENT,
+          handleSectionNavigation,
+        );
       };
 
       const showUserBubble = () => {
@@ -259,7 +319,7 @@ export function AiVisibilityEmptyWindow() {
               completeReveal(self);
 
               if (self.progress >= PIN_RELEASE_PROGRESS) {
-                removeCompletedPin();
+                releaseCompletedPin();
               }
 
               return;
@@ -348,7 +408,10 @@ export function AiVisibilityEmptyWindow() {
         .to({}, { duration: 0.2 }, 0.78);
     }, stage);
 
-    return () => ctx.revert();
+    return () => {
+      removeSectionNavigationListener?.();
+      ctx.revert();
+    };
   }, []);
 
   return (

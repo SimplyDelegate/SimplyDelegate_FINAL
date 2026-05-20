@@ -6,6 +6,14 @@ import gsap from "gsap";
 import { AgencyButton } from "@/components/ui/agency-button";
 import { registerScrollTrigger, shouldReduceMotion } from "@/lib/animations";
 
+const SECTION_NAVIGATION_EVENT = "site:section-navigation";
+const SECTION_ID = "webdesign";
+const SECTION_NAVIGATION_ORDER = [
+  "google-sichtbarkeit",
+  "ki-sichtbarkeit",
+  "webdesign",
+  "kontakt",
+];
 const videoSrc =
   "/videos/u1187684669_httpss.mj.runkpWjapEvck4_0f13a8aa-de59-4074-b9b2-_424d8ffd-fc68-4c61-b565-fa0cf0fa2e4d_3%20(2).mp4";
 const ctaHref = "#kontakt";
@@ -99,6 +107,8 @@ export function WebdesignSection() {
     video.pause();
     video.addEventListener("loadedmetadata", updateVideoDuration);
 
+    let removeSectionNavigationListener: (() => void) | null = null;
+
     const ctx = gsap.context(() => {
       const setFinalStageState = () => {
         gsap.set(stage, { opacity: 1, yPercent: -50, y: 0, scale: 1 });
@@ -117,6 +127,7 @@ export function WebdesignSection() {
 
       let stageRevealTween: ReturnType<typeof gsap.to> | null = null;
       let timeline: ReturnType<typeof gsap.timeline> | null = null;
+      let hasReleasedPin = false;
 
       const completeStageReveal = () => {
         if (hasStageRevealedRef.current) {
@@ -133,6 +144,67 @@ export function WebdesignSection() {
         }
 
         setFinalStageState();
+      };
+
+      const releasePin = () => {
+        if (hasReleasedPin) return;
+
+        const trigger = (
+          timeline as
+            | (ReturnType<typeof gsap.timeline> & {
+                scrollTrigger?: InstanceType<typeof ScrollTrigger>;
+              })
+            | null
+        )?.scrollTrigger;
+
+        if (!trigger) return;
+
+        hasReleasedPin = true;
+        trigger.kill(true, true);
+        setFinalStageState();
+
+        requestAnimationFrame(() => {
+          ScrollTrigger.refresh();
+          ScrollTrigger.update();
+        });
+      };
+
+      const handleSectionNavigation = (event: Event) => {
+        const { targetId } = (event as CustomEvent<{ targetId?: string }>)
+          .detail ?? {};
+        const ownIndex = SECTION_NAVIGATION_ORDER.indexOf(SECTION_ID);
+        const targetIndex = SECTION_NAVIGATION_ORDER.indexOf(targetId ?? "");
+
+        if (targetIndex < ownIndex) {
+          return;
+        }
+
+        completeStageReveal();
+        releasePin();
+        setVideoProgress(VIDEO_SCRUB_START_PROGRESS);
+
+        if (targetId === SECTION_ID) {
+          gsap.fromTo(
+            stage,
+            { opacity: 0, yPercent: -50, y: 24, scale: 0.985 },
+            {
+              opacity: 1,
+              yPercent: -50,
+              y: 0,
+              scale: 1,
+              duration: 0.36,
+              ease: "power3.out",
+            },
+          );
+        }
+      };
+
+      window.addEventListener(SECTION_NAVIGATION_EVENT, handleSectionNavigation);
+      removeSectionNavigationListener = () => {
+        window.removeEventListener(
+          SECTION_NAVIGATION_EVENT,
+          handleSectionNavigation,
+        );
       };
 
       timeline = gsap.timeline({
@@ -192,6 +264,7 @@ export function WebdesignSection() {
     }, stage);
 
     return () => {
+      removeSectionNavigationListener?.();
       video.removeEventListener("loadedmetadata", updateVideoDuration);
       ctx.revert();
     };
