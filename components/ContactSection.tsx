@@ -204,8 +204,8 @@ export function ContactSection() {
       <footer className="contact-footer" aria-label="Footer">
         <div className="contact-footer__inner">
           <div className="contact-footer__links">
-            <a href="#">Datenschutz</a>
-            <a href="#">Impressum</a>
+            <a href="/datenschutz">Datenschutz</a>
+            <a href="/impressum">Impressum</a>
           </div>
           <p>SimplyDelegate 2026</p>
         </div>

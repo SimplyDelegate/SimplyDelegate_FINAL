@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
 
@@ -12,9 +13,36 @@ const navLinks = [
 ];
 
 const SECTION_NAVIGATION_EVENT = "site:section-navigation";
+const PENDING_HOME_SECTION_KEY = "site:pending-home-section";
 
 const getTargetIdFromHash = (hash: string) =>
   hash.startsWith("#") ? hash.slice(1) : hash;
+
+const getHomeHref = (hash: string, isHomePage: boolean) =>
+  isHomePage ? hash : `/${hash}`;
+
+const rememberPendingHomeSection = (hash: string) => {
+  try {
+    window.sessionStorage.setItem(PENDING_HOME_SECTION_KEY, hash);
+  } catch {
+    // Navigation still works without the handoff flag; the homepage keeps its
+    // reload-to-top behavior as the fallback.
+  }
+};
+
+const takePendingHomeSection = () => {
+  try {
+    const pendingHash = window.sessionStorage.getItem(PENDING_HOME_SECTION_KEY);
+
+    if (pendingHash) {
+      window.sessionStorage.removeItem(PENDING_HOME_SECTION_KEY);
+    }
+
+    return pendingHash;
+  } catch {
+    return null;
+  }
+};
 
 const dispatchSectionNavigation = (targetId: string) => {
   window.dispatchEvent(
@@ -117,8 +145,10 @@ const scheduleHashScroll = (
 };
 
 export function StickyNavbar() {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -151,16 +181,35 @@ export function StickyNavbar() {
   }, []);
 
   useEffect(() => {
+    if (!isHomePage) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
     // On refresh / initial load always start at the very top of the hero,
     // regardless of any hash that might still be in the URL.
-    if (window.location.hash) {
+    const pendingHomeSection = takePendingHomeSection();
+    const shouldUseInitialHash =
+      pendingHomeSection && pendingHomeSection === window.location.hash;
+
+    if (shouldUseInitialHash) {
+      const targetId = getTargetIdFromHash(window.location.hash);
+
+      if (targetId) {
+        dispatchSectionNavigation(targetId);
+      }
+
+      scheduleHashScroll(window.location.hash, false, 180, 1600);
+    } else if (window.location.hash) {
       window.history.replaceState(
         null,
         "",
         window.location.pathname + window.location.search,
       );
+      window.scrollTo({ top: 0, behavior: "auto" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
-    window.scrollTo({ top: 0, behavior: "auto" });
 
     const scrollToCurrentHash = () => {
       if (window.location.hash) {
@@ -181,10 +230,20 @@ export function StickyNavbar() {
       window.removeEventListener("hashchange", scrollToCurrentHash);
       window.removeEventListener("popstate", scrollToCurrentHash);
     };
-  }, []);
+  }, [isHomePage]);
 
   const closeMenu = () => setIsMenuOpen(false);
   const handleNavClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!isHomePage) {
+      rememberPendingHomeSection(href);
+
+      if (event.type === "click") {
+        closeMenu();
+      }
+
+      return;
+    }
+
     event.preventDefault();
     closeMenu();
     const targetId = getTargetIdFromHash(href);
@@ -201,7 +260,7 @@ export function StickyNavbar() {
       <nav className="site-nav__inner" aria-label="Hauptnavigation">
         <a
           className="site-nav__brand"
-          href="#top"
+          href={getHomeHref("#top", isHomePage)}
           onMouseDown={(event) => handleNavClick(event, "#top")}
           onClick={(event) => handleNavClick(event, "#top")}
         >
@@ -219,7 +278,7 @@ export function StickyNavbar() {
           {navLinks.map((link) => (
             <a
               className="site-nav__link"
-              href={link.href}
+              href={getHomeHref(link.href, isHomePage)}
               key={link.href}
               onMouseDown={(event) => handleNavClick(event, link.href)}
               onClick={(event) => handleNavClick(event, link.href)}
@@ -229,7 +288,7 @@ export function StickyNavbar() {
           ))}
           <a
             className="site-nav__cta"
-            href="#kontakt"
+            href={getHomeHref("#kontakt", isHomePage)}
             onMouseDown={(event) => handleNavClick(event, "#kontakt")}
             onClick={(event) => handleNavClick(event, "#kontakt")}
           >
@@ -260,7 +319,7 @@ export function StickyNavbar() {
         {navLinks.map((link) => (
           <a
             className="site-nav__mobile-link"
-            href={link.href}
+            href={getHomeHref(link.href, isHomePage)}
             key={link.href}
             onMouseDown={(event) => handleNavClick(event, link.href)}
             onClick={(event) => handleNavClick(event, link.href)}
@@ -271,7 +330,7 @@ export function StickyNavbar() {
         ))}
         <a
           className="site-nav__mobile-cta"
-          href="#kontakt"
+          href={getHomeHref("#kontakt", isHomePage)}
           onMouseDown={(event) => handleNavClick(event, "#kontakt")}
           onClick={(event) => handleNavClick(event, "#kontakt")}
           tabIndex={isMenuOpen ? 0 : -1}
