@@ -10,6 +10,7 @@ type ContactTopic =
 
 type FormState = {
   name: string;
+  domain: string;
   email: string;
   topics: ContactTopic[];
 };
@@ -21,6 +22,7 @@ type SubmitState = {
 
 const initialFormState: FormState = {
   name: "",
+  domain: "",
   email: "",
   topics: [],
 };
@@ -40,7 +42,8 @@ export function ContactSection() {
   });
 
   const updateField =
-    (field: "name" | "email") => (event: ChangeEvent<HTMLInputElement>) => {
+    (field: "name" | "domain" | "email") =>
+    (event: ChangeEvent<HTMLInputElement>) => {
       setForm((current) => ({ ...current, [field]: event.target.value }));
     };
 
@@ -72,13 +75,20 @@ export function ContactSection() {
     setIsSubmitting(true);
 
     try {
+      const message = [
+        form.domain.trim() ? `Domain: ${form.domain.trim()}` : null,
+        `Interesse: ${form.topics.join(", ")}`,
+      ]
+        .filter(Boolean)
+        .join("\n");
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
-          message: `Interesse: ${form.topics.join(", ")}`,
+          message,
         }),
       });
       const data = (await response.json()) as SubmitState;
@@ -132,18 +142,33 @@ export function ContactSection() {
             <h3>Kontakt aufnehmen</h3>
           </div>
 
-          <div className="contact-field">
-            <label htmlFor="contact-name">Name</label>
-            <input
-              id="contact-name"
-              name="name"
-              type="text"
-              autoComplete="name"
-              placeholder="Dein Name"
-              value={form.name}
-              onChange={updateField("name")}
-              required
-            />
+          <div className="contact-field-row">
+            <div className="contact-field">
+              <label htmlFor="contact-name">Name</label>
+              <input
+                id="contact-name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                placeholder="Dein Name"
+                value={form.name}
+                onChange={updateField("name")}
+                required
+              />
+            </div>
+
+            <div className="contact-field">
+              <label htmlFor="contact-domain">Domain</label>
+              <input
+                id="contact-domain"
+                name="domain"
+                type="text"
+                autoComplete="url"
+                placeholder="deine-website.de"
+                value={form.domain}
+                onChange={updateField("domain")}
+              />
+            </div>
           </div>
 
           <div className="contact-field">

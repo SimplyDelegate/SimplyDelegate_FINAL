@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 
 import { AgencyButton } from "@/components/ui/agency-button";
+import { Badge } from "@/components/ui/badge";
 import { registerScrollTrigger, shouldReduceMotion } from "@/lib/animations";
 
 const SECTION_NAVIGATION_EVENT = "site:section-navigation";
@@ -279,6 +280,9 @@ export function WebdesignSection() {
       <div ref={pinRef} className="webdesign-pin relative z-10 min-h-screen overflow-hidden">
         <div className="pointer-events-none absolute left-4 top-8 z-20 max-w-[30rem] sm:left-8 sm:top-10 lg:inset-y-0 lg:left-[7vw] lg:top-0 lg:flex lg:w-[30rem] lg:max-w-none lg:items-center">
           <div className="serp-copy">
+            <Badge className="mb-6 border-[rgba(138,94,24,0.38)] bg-[#f5d89d] px-5 py-2 text-base font-extrabold uppercase tracking-[0.18em] text-[#2a1a05] shadow-[0_0_36px_rgba(244,198,119,0.72),0_18px_34px_rgba(138,94,24,0.2)]">
+              WEBDESIGN
+            </Badge>
             <h2
               id="webdesign-heading"
               className="max-w-[15ch] text-[2.85rem] font-medium leading-[0.92] text-[#07080f] sm:text-[4rem] lg:text-[4.25rem] 2xl:text-[5.15rem]"
@@ -302,7 +306,7 @@ export function WebdesignSection() {
 
         <div className="webdesign-stage-shell" ref={stageRef}>
           <div className="webdesign-stage-note" aria-hidden="true">
-            So k&#246;nnte Ihre Webseite aussehen
+            So k&#246;nnte Ihre Website aussehen
           </div>
 
           <div className="webdesign-video-stage">
