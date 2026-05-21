@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-const fadeIn = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0 },
-};
+const MOIN_SWEEP_MS = 800;
+const MOIN_HOLD_MS = 500;
+const LINE_SWEEP_MS = 900;
+const LINE_STAGGER_MS = 350;
+
+type Phase = "moin" | "hold" | "headline" | "done";
 
 export function AgencyHero() {
   const reduceMotion = useReducedMotion();
-  const initial = reduceMotion ? "visible" : "hidden";
   const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [phase, setPhase] = useState<Phase>(reduceMotion ? "done" : "moin");
 
   // Keep the idle motion restrained on smaller screens without changing layout.
   useEffect(() => {
@@ -23,6 +25,27 @@ export function AgencyHero() {
 
     return () => mediaQuery.removeEventListener("change", updateViewport);
   }, []);
+
+  // Drives the MOIN -> headline reveal timeline on mount.
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    if (phase === "moin") {
+      const id = window.setTimeout(() => setPhase("hold"), MOIN_SWEEP_MS);
+      return () => window.clearTimeout(id);
+    }
+    if (phase === "hold") {
+      const id = window.setTimeout(() => setPhase("headline"), MOIN_HOLD_MS);
+      return () => window.clearTimeout(id);
+    }
+    if (phase === "headline") {
+      const id = window.setTimeout(
+        () => setPhase("done"),
+        LINE_STAGGER_MS + LINE_SWEEP_MS
+      );
+      return () => window.clearTimeout(id);
+    }
+  }, [phase, reduceMotion]);
 
   // Keep the logo moving in a calm orbit-like loop instead of a single up/down motion.
   const logoIdleAnimation = reduceMotion
@@ -56,6 +79,10 @@ export function AgencyHero() {
         y: isMobileViewport ? [0, -4, -2, 0] : [0, -10, -4, 0],
       };
 
+  const showMoin = phase === "moin" || phase === "hold";
+  const headlineRevealed = phase === "headline" || phase === "done";
+  const revealRest = phase === "done";
+
   return (
     <section
       className="agency-hero relative isolate flex min-h-screen overflow-hidden bg-[#f2f0f3] text-[#06070c]"
@@ -65,39 +92,93 @@ export function AgencyHero() {
         id="top"
         className="mx-auto grid w-full max-w-[1860px] grid-cols-1 items-center gap-10 px-5 pb-16 pt-16 sm:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:pb-24 lg:pt-12"
       >
-        <motion.div
-          className="relative z-10 max-w-[1220px] lg:pl-10"
-          initial={initial}
-          animate="visible"
-          variants={fadeIn}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <p className="mb-7 max-w-[36rem] text-[0.82rem] font-medium uppercase text-[#5b5d67]">
-            SEO. KI-Sichtbarkeit. Webdesign.
-          </p>
-          <h1
-            id="agency-hero-title"
-            className="max-w-none text-[clamp(3.45rem,4.2vw,5rem)] font-semibold leading-[1.08] tracking-[-0.025em] text-[#02030a]"
+        <div className="relative z-10 max-w-[1220px] lg:pl-10">
+          <div className="relative">
+            <h1
+              id="agency-hero-title"
+              className="max-w-none text-[clamp(3.45rem,4.2vw,5rem)] font-semibold leading-[1.08] tracking-[-0.025em] text-[#02030a]"
+            >
+              <motion.span
+                className="block whitespace-nowrap"
+                initial={reduceMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
+                animate={
+                  reduceMotion || headlineRevealed
+                    ? { clipPath: "inset(0 0% 0 0)" }
+                    : { clipPath: "inset(0 100% 0 0)" }
+                }
+                transition={{
+                  duration: LINE_SWEEP_MS / 1000,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                Wir machen sichtbar,
+              </motion.span>
+              <motion.span
+                className="block whitespace-nowrap"
+                initial={reduceMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
+                animate={
+                  reduceMotion || headlineRevealed
+                    ? { clipPath: "inset(0 0% 0 0)" }
+                    : { clipPath: "inset(0 100% 0 0)" }
+                }
+                transition={{
+                  duration: LINE_SWEEP_MS / 1000,
+                  delay: LINE_STAGGER_MS / 1000,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                was ihr Unternehmen kann.
+              </motion.span>
+            </h1>
+
+            <AnimatePresence>
+              {showMoin && (
+                <motion.img
+                  key="moin"
+                  src="/hero-assets/MOIN (1).png"
+                  alt=""
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 top-0 h-full w-auto object-contain object-left"
+                  initial={{ clipPath: "inset(0 100% 0 0)", opacity: 1 }}
+                  animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    clipPath: {
+                      duration: MOIN_SWEEP_MS / 1000,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
+                    opacity: { duration: 0.25, ease: "easeOut" },
+                  }}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+
+          <motion.p
+            className="mt-10 max-w-[45rem] text-[clamp(1.1rem,1.35vw,1.42rem)] font-medium leading-[1.42] text-[#434651] max-sm:max-w-[20.6rem] max-sm:text-[1.03rem]"
+            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+            animate={
+              reduceMotion || revealRest
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: 12 }
+            }
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="block whitespace-nowrap">
-              Wir machen sichtbar,
-            </span>
-            <span className="block whitespace-nowrap">
-              was ihr Unternehmen kann.
-            </span>
-          </h1>
-          <p className="mt-10 max-w-[45rem] text-[clamp(1.1rem,1.35vw,1.42rem)] font-medium leading-[1.42] text-[#434651] max-sm:max-w-[20.6rem] max-sm:text-[1.03rem]">
             Wir gestalten digitale Auftritte, die in Suche, KI Antworten und
             auf Ihrer Website Vertrauen aufbauen, bevor der erste Kontakt
             entsteht.
-          </p>
-        </motion.div>
+          </motion.p>
+        </div>
 
         <motion.div
           className="agency-hero-visual relative z-0 mx-auto h-[44vh] min-h-[360px] w-full max-w-[720px] lg:ml-[1.375rem] lg:mr-[-1.375rem] lg:mt-4 lg:h-[66vh] lg:min-h-[460px] lg:max-h-[520px]"
           initial={reduceMotion ? false : { opacity: 0, scale: 0.96, y: 28 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+          animate={
+            reduceMotion || revealRest
+              ? { opacity: 1, scale: 1, y: 0 }
+              : { opacity: 0, scale: 0.96, y: 28 }
+          }
+          transition={{ duration: 0.95, ease: [0.16, 1, 0.3, 1] }}
           aria-hidden="true"
         >
           <motion.div
