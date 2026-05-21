@@ -3,10 +3,15 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
 
+type ContactTopic =
+  | "Suchmaschinen-Sichtbarkeit"
+  | "KI-Sichtbarkeit"
+  | "Webdesign";
+
 type FormState = {
   name: string;
   email: string;
-  message: string;
+  topics: ContactTopic[];
 };
 
 type SubmitState = {
@@ -17,8 +22,14 @@ type SubmitState = {
 const initialFormState: FormState = {
   name: "",
   email: "",
-  message: "",
+  topics: [],
 };
+
+const contactTopics: ContactTopic[] = [
+  "Suchmaschinen-Sichtbarkeit",
+  "KI-Sichtbarkeit",
+  "Webdesign",
+];
 
 export function ContactSection() {
   const [form, setForm] = useState<FormState>(initialFormState);
@@ -29,21 +40,46 @@ export function ContactSection() {
   });
 
   const updateField =
-    (field: keyof FormState) =>
-    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (field: "name" | "email") => (event: ChangeEvent<HTMLInputElement>) => {
       setForm((current) => ({ ...current, [field]: event.target.value }));
     };
 
+  const toggleTopic = (topic: ContactTopic) => {
+    setForm((current) => {
+      const isSelected = current.topics.includes(topic);
+
+      return {
+        ...current,
+        topics: isSelected
+          ? current.topics.filter((currentTopic) => currentTopic !== topic)
+          : [...current.topics, topic],
+      };
+    });
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsSubmitting(true);
     setStatus({ tone: "idle", message: "" });
+
+    if (!form.topics.length) {
+      setStatus({
+        tone: "error",
+        message: "Bitte wähle mindestens ein Thema aus.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: `Interesse: ${form.topics.join(", ")}`,
+        }),
       });
       const data = (await response.json()) as SubmitState;
 
@@ -80,7 +116,10 @@ export function ContactSection() {
       <div className="contact-section__inner">
         <div className="contact-section__copy">
           <p className="contact-section__eyebrow">Kontakt</p>
-          <h2 id="contact-heading">Bereit für smarte Automation?</h2>
+          <h2 id="contact-heading">
+            <span>Bereit, mehr Kunden über</span>
+            <span>Google & KI-Suchen zu gewinnen?</span>
+          </h2>
           <p>
             Schreib uns direkt oder buche dein kostenloses Gespräch - ein
             offener Austausch ohne Verpflichtungen.
@@ -121,18 +160,28 @@ export function ContactSection() {
             />
           </div>
 
-          <div className="contact-field">
-            <label htmlFor="contact-message">Nachricht</label>
-            <textarea
-              id="contact-message"
-              name="message"
-              placeholder="Erzähl uns kurz, wobei wir helfen können."
-              value={form.message}
-              onChange={updateField("message")}
-              required
-              rows={6}
-            />
-          </div>
+          <fieldset className="contact-field contact-topic-field">
+            <legend>Wobei dürfen wir helfen?</legend>
+            <div className="contact-topic-options">
+              {contactTopics.map((topic) => {
+                const isSelected = form.topics.includes(topic);
+
+                return (
+                  <button
+                    className={`contact-topic-button ${
+                      isSelected ? "contact-topic-button--selected" : ""
+                    }`}
+                    type="button"
+                    aria-pressed={isSelected}
+                    key={topic}
+                    onClick={() => toggleTopic(topic)}
+                  >
+                    {topic}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
 
           <button className="contact-submit" type="submit" disabled={isSubmitting}>
             <span>{isSubmitting ? "Wird vorbereitet..." : "Nachricht senden"}</span>
@@ -151,6 +200,16 @@ export function ContactSection() {
           ) : null}
         </form>
       </div>
+
+      <footer className="contact-footer" aria-label="Footer">
+        <div className="contact-footer__inner">
+          <div className="contact-footer__links">
+            <a href="#">Datenschutz</a>
+            <a href="#">Impressum</a>
+          </div>
+          <p>SimplyDelegate 2026</p>
+        </div>
+      </footer>
     </section>
   );
 }

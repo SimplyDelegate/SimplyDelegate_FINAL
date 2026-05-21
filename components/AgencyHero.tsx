@@ -28,32 +28,32 @@ export function AgencyHero() {
   const logoIdleAnimation = reduceMotion
     ? undefined
     : {
-        x: isMobileViewport ? [0, 2, -1, 0] : [0, 5, -3, 0],
-        y: isMobileViewport ? [0, -4, -2, 0] : [0, -10, -4, 0],
-        rotate: isMobileViewport ? [0, 0.45, -0.35, 0] : [0, 0.85, -0.65, 0],
-        scale: isMobileViewport ? [1, 1.012, 1.005, 1] : [1, 1.022, 1.01, 1],
+        x: isMobileViewport ? [0, 4, -2, 0] : [0, 10, -6, 0],
+        y: isMobileViewport ? [0, -8, -4, 0] : [0, -20, -8, 0],
+        rotate: isMobileViewport ? [0, 0.85, -0.65, 0] : [0, 1.8, -1.2, 0],
+        scale: isMobileViewport ? [1, 1.024, 1.01, 1] : [1, 1.04, 1.018, 1],
         filter: isMobileViewport
           ? [
-              "drop-shadow(0 20px 28px rgba(78, 34, 174, 0.08)) drop-shadow(0 0 14px rgba(112, 72, 255, 0.08))",
-              "drop-shadow(0 28px 44px rgba(78, 34, 174, 0.16)) drop-shadow(0 0 28px rgba(112, 72, 255, 0.16))",
-              "drop-shadow(0 24px 36px rgba(57, 118, 255, 0.12)) drop-shadow(0 0 18px rgba(71, 191, 255, 0.14))",
-              "drop-shadow(0 20px 28px rgba(78, 34, 174, 0.08)) drop-shadow(0 0 14px rgba(112, 72, 255, 0.08))",
+              "drop-shadow(0 20px 28px rgba(78, 34, 174, 0.1)) drop-shadow(0 0 16px rgba(112, 72, 255, 0.1))",
+              "drop-shadow(0 30px 48px rgba(78, 34, 174, 0.22)) drop-shadow(0 0 34px rgba(112, 72, 255, 0.22))",
+              "drop-shadow(0 26px 40px rgba(57, 118, 255, 0.16)) drop-shadow(0 0 24px rgba(71, 191, 255, 0.18))",
+              "drop-shadow(0 20px 28px rgba(78, 34, 174, 0.1)) drop-shadow(0 0 16px rgba(112, 72, 255, 0.1))",
             ]
           : [
-              "drop-shadow(0 26px 40px rgba(78, 34, 174, 0.1)) drop-shadow(0 0 18px rgba(112, 72, 255, 0.1))",
-              "drop-shadow(0 40px 64px rgba(78, 34, 174, 0.2)) drop-shadow(0 0 36px rgba(112, 72, 255, 0.2))",
-              "drop-shadow(0 34px 54px rgba(57, 118, 255, 0.16)) drop-shadow(0 0 28px rgba(71, 191, 255, 0.18))",
-              "drop-shadow(0 26px 40px rgba(78, 34, 174, 0.1)) drop-shadow(0 0 18px rgba(112, 72, 255, 0.1))",
+              "drop-shadow(0 26px 40px rgba(78, 34, 174, 0.12)) drop-shadow(0 0 20px rgba(112, 72, 255, 0.12))",
+              "drop-shadow(0 44px 72px rgba(78, 34, 174, 0.28)) drop-shadow(0 0 46px rgba(112, 72, 255, 0.28))",
+              "drop-shadow(0 36px 58px rgba(57, 118, 255, 0.2)) drop-shadow(0 0 34px rgba(71, 191, 255, 0.24))",
+              "drop-shadow(0 26px 40px rgba(78, 34, 174, 0.12)) drop-shadow(0 0 20px rgba(112, 72, 255, 0.12))",
             ],
       };
 
   const logoGlowAnimation = reduceMotion
     ? undefined
     : {
-        opacity: isMobileViewport ? [0.28, 0.46, 0.34, 0.28] : [0.34, 0.56, 0.42, 0.34],
-        scale: isMobileViewport ? [0.96, 1.04, 1, 0.96] : [0.94, 1.08, 1.01, 0.94],
-        x: isMobileViewport ? [0, 1, -1, 0] : [0, 3, -2, 0],
-        y: isMobileViewport ? [0, -2, -1, 0] : [0, -6, -2, 0],
+        opacity: isMobileViewport ? [0.3, 0.52, 0.38, 0.3] : [0.36, 0.64, 0.46, 0.36],
+        scale: isMobileViewport ? [0.95, 1.08, 1.01, 0.95] : [0.92, 1.14, 1.03, 0.92],
+        x: isMobileViewport ? [0, 2, -1, 0] : [0, 6, -4, 0],
+        y: isMobileViewport ? [0, -4, -2, 0] : [0, -10, -4, 0],
       };
 
   return (
@@ -104,7 +104,7 @@ export function AgencyHero() {
             className="relative mx-auto flex h-full w-full items-center justify-center"
             animate={logoIdleAnimation}
             transition={{
-              duration: isMobileViewport ? 7.2 : 8.4,
+              duration: isMobileViewport ? 6.4 : 6.8,
               ease: "easeInOut",
               repeat: reduceMotion ? 0 : Infinity,
             }}
@@ -116,7 +116,7 @@ export function AgencyHero() {
               className="pointer-events-none absolute left-1/2 top-1/2 h-[56%] w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full"
               animate={logoGlowAnimation}
               transition={{
-                duration: isMobileViewport ? 7 : 8.1,
+                duration: isMobileViewport ? 6.2 : 6.6,
                 ease: "easeInOut",
                 repeat: reduceMotion ? 0 : Infinity,
               }}
