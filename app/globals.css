@@ -464,6 +464,11 @@ body {
   gap: 0.42rem;
 }
 
+.contact-field-row {
+  display: grid;
+  gap: 0.9rem;
+}
+
 .contact-field label,
 .contact-field legend {
   color: rgba(255, 255, 255, 0.82);
@@ -475,6 +480,10 @@ body {
   margin: 0;
   border: 0;
   padding: 0;
+}
+
+.contact-topic-field legend {
+  margin-bottom: 0.42rem;
 }
 
 .contact-topic-options {
@@ -682,6 +691,10 @@ body {
   .contact-card {
     gap: 0.9rem;
   }
+
+  .contact-field-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
@@ -754,6 +767,10 @@ body {
 
   .contact-field label {
     font-size: 0.8rem;
+  }
+
+  .contact-topic-field legend {
+    margin-bottom: 0.32rem;
   }
 
   .contact-field input {
@@ -1296,17 +1313,20 @@ body {
   z-index: 20;
   display: inline-flex;
   width: fit-content;
-  min-height: 24px;
+  min-height: 32px;
   align-items: center;
   justify-content: center;
   transform: translateY(calc(-100% - 1rem));
-  border: 1px solid rgba(138, 94, 24, 0.42);
-  border-radius: 999px;
-  background: rgba(158, 109, 30, 0.16);
-  padding: 0 10px;
-  color: #8a5e18;
-  font-size: 11px;
-  font-weight: 600;
+  border: 1px solid rgba(138, 94, 24, 0.38);
+  border-radius: 8px;
+  background: #f5d89d;
+  padding: 0.35rem 0.85rem;
+  color: #2a1a05;
+  box-shadow:
+    0 0 36px rgba(244, 198, 119, 0.72),
+    0 18px 34px rgba(138, 94, 24, 0.2);
+  font-size: clamp(0.72rem, 0.75vw, 0.85rem);
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.01em;
   pointer-events: none;
@@ -3153,15 +3173,18 @@ body {
 .ai-chat-answer .ai-chat-result-note {
   display: inline-flex;
   width: fit-content;
-  min-height: 24px;
+  min-height: 32px;
   align-items: center;
-  border: 1px solid rgba(244, 198, 119, 0.28);
-  border-radius: 999px;
-  background: rgba(244, 198, 119, 0.1);
-  padding: 0 10px;
-  color: #f5d89d;
-  font-size: 11px;
-  font-weight: 600;
+  border: 1px solid rgba(138, 94, 24, 0.38);
+  border-radius: 8px;
+  background: #f5d89d;
+  padding: 0.35rem 0.85rem;
+  color: #2a1a05;
+  box-shadow:
+    0 0 36px rgba(244, 198, 119, 0.72),
+    0 18px 34px rgba(138, 94, 24, 0.2);
+  font-size: clamp(0.72rem, 0.75vw, 0.85rem);
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.01em;
 }
