@@ -42,6 +42,15 @@ const getTargetIdFromHash = (hash: string) =>
 const getHomeHref = (hash: string, isHomePage: boolean) =>
   isHomePage ? hash : `/${hash}`;
 
+const getMaxScrollTop = () => {
+  const scrollRoot = document.scrollingElement ?? document.documentElement;
+
+  return Math.max(0, scrollRoot.scrollHeight - window.innerHeight);
+};
+
+const clampScrollTop = (top: number) =>
+  Math.min(Math.max(0, top), getMaxScrollTop());
+
 const rememberPendingHomeSection = (hash: string) => {
   try {
     window.sessionStorage.setItem(PENDING_HOME_SECTION_KEY, hash);
@@ -95,7 +104,7 @@ const clearPendingHashScroll = () => {
 };
 
 const setScrollTop = (top: number) => {
-  const nextTop = Math.max(0, top);
+  const nextTop = clampScrollTop(top);
   const scrollRoot = document.scrollingElement ?? document.documentElement;
 
   window.scrollTo({ top: nextTop, behavior: "auto" });
@@ -114,6 +123,36 @@ const getHashScrollTarget = (hash: string) => {
   }
 
   if (targetId !== "top") {
+    if (targetId === "kontakt") {
+      const contactInner = target.querySelector<HTMLElement>(
+        ".contact-section__inner",
+      );
+      const contactFooter = target.querySelector<HTMLElement>(".contact-footer");
+      const nav = document.querySelector<HTMLElement>(".site-nav");
+      const navOffset = Math.ceil((nav?.getBoundingClientRect().height ?? 0) + 8);
+      const viewportBottomGap = 0;
+      const scrollTop = window.scrollY;
+      const anchorElement = contactInner ?? target;
+      const anchorRect = anchorElement.getBoundingClientRect();
+      const footerRect = contactFooter?.getBoundingClientRect();
+      const blockTop = anchorRect.top + scrollTop;
+      const blockBottom = (footerRect ?? anchorRect).bottom + scrollTop;
+      const blockHeight = blockBottom - blockTop;
+      const availableHeight = Math.max(
+        0,
+        window.innerHeight - navOffset - viewportBottomGap,
+      );
+      const targetTop =
+        blockHeight <= availableHeight
+          ? blockTop - navOffset - (availableHeight - blockHeight) / 2
+          : blockTop - navOffset;
+
+      return {
+        targetId,
+        targetTop: clampScrollTop(targetTop),
+      };
+    }
+
     return {
       targetId,
       targetTop: target.classList.contains("service-section")

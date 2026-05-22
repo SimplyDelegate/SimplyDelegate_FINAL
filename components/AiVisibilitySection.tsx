@@ -29,7 +29,7 @@ export function AiVisibilitySection() {
               href={ctaHref}
               variant="animatedDark"
             >
-              KI-Sichtbarkeit analysieren
+              Prüfen, ob KI dich empfiehlt
             </AgencyButton>
           </div>
         </div>
