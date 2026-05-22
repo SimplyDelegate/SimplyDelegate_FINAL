@@ -138,7 +138,6 @@ export function ContactSection() {
 
         <form className="contact-card" onSubmit={handleSubmit}>
           <div className="contact-card__header">
-            <span className="contact-card__spark" aria-hidden="true" />
             <h3>Kontakt aufnehmen</h3>
           </div>
 
