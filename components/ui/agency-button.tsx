@@ -33,13 +33,13 @@ export function AgencyButton({
         asChild
         className={cn(
           isAnimatedDark
-            ? "group relative h-14 gap-4 overflow-visible rounded-[8px] border-white/15 bg-[#05060a] px-6 pr-5 text-[0.95rem] font-semibold text-white shadow-[0_18px_42px_rgba(5,6,10,0.24),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 hover:bg-[#0c0e14] hover:shadow-[0_26px_56px_rgba(5,6,10,0.34),0_0_0_1px_rgba(255,255,255,0.1),inset_0_1px_0_rgba(255,255,255,0.24)]"
+            ? "group relative h-auto min-h-14 max-w-[calc(100vw-2.25rem)] gap-4 overflow-visible whitespace-normal rounded-[8px] border-white/15 bg-[#05060a] px-5 py-2.5 text-center text-[0.95rem] font-semibold leading-[1.15] text-white shadow-[0_18px_42px_rgba(5,6,10,0.24),inset_0_1px_0_rgba(255,255,255,0.2)] transition-all duration-300 hover:bg-[#0c0e14] hover:shadow-[0_26px_56px_rgba(5,6,10,0.34),0_0_0_1px_rgba(255,255,255,0.1),inset_0_1px_0_rgba(255,255,255,0.24)] sm:h-14 sm:max-w-none sm:whitespace-nowrap sm:px-6 sm:py-0 sm:pr-5 sm:leading-none"
             : "group h-12 gap-4 overflow-hidden px-5 text-[0.92rem]",
           className,
         )}
       >
         <a href={href}>
-          <span>{children}</span>
+          <span className={isAnimatedDark ? "min-w-0" : undefined}>{children}</span>
           {isAnimatedDark ? (
             <span
               aria-hidden="true"

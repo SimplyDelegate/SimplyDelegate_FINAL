@@ -38,7 +38,7 @@ export function GoogleRankingSection() {
                 href={ctaHref}
                 variant="animatedDark"
               >
-                Ranking-Potenzial prüfen
+                Google-Sichtbarkeit kostenlos prüfen
               </AgencyButton>
             </div>
           </div>

@@ -323,7 +323,7 @@ export function WebdesignSection() {
                 href={ctaHref}
                 variant="animatedDark"
               >
-                Auftritt bewerten lassen
+                Website auf Anfragen prüfen
               </AgencyButton>
             </div>
           </div>
