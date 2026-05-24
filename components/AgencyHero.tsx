@@ -1,6 +1,7 @@
 "use client";
 
 import type { FormEvent } from "react";
+import type { MouseEvent } from "react";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
@@ -10,8 +11,61 @@ const MOIN_SWEEP_MS = 800;
 const MOIN_HOLD_MS = 500;
 const LINE_SWEEP_MS = 900;
 const LINE_STAGGER_MS = 350;
+const NEXT_SECTION_ID = "google-sichtbarkeit";
+const SECTION_NAVIGATION_EVENT = "site:section-navigation";
 
 type Phase = "moin" | "hold" | "headline" | "done";
+
+function HeroScrollIndicator({ reduceMotion }: { reduceMotion: boolean | null }) {
+  const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    const target = document.getElementById(NEXT_SECTION_ID);
+
+    if (!target) {
+      return;
+    }
+
+    window.dispatchEvent(
+      new CustomEvent(SECTION_NAVIGATION_EVENT, {
+        detail: { targetId: NEXT_SECTION_ID },
+      }),
+    );
+
+    const hash = `#${NEXT_SECTION_ID}`;
+
+    if (window.location.hash !== hash) {
+      window.history.pushState(null, "", hash);
+    }
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const nextTarget = document.getElementById(NEXT_SECTION_ID);
+
+        if (!nextTarget) {
+          return;
+        }
+
+        window.scrollTo({
+          top: nextTarget.offsetTop,
+          behavior: reduceMotion ? "auto" : "smooth",
+        });
+      });
+    });
+  };
+
+  return (
+    <a
+      className="agency-hero-scroll-indicator"
+      href={`#${NEXT_SECTION_ID}`}
+      aria-label="Zur nächsten Sektion scrollen"
+      onClick={handleClick}
+    >
+      <span>Mehr entdecken</span>
+      <span className="agency-hero-scroll-indicator__chevron" aria-hidden="true" />
+    </a>
+  );
+}
 
 export function AgencyHero() {
   const reduceMotion = useReducedMotion();
@@ -357,6 +411,8 @@ export function AgencyHero() {
           </motion.div>
         </motion.div>
       </div>
+
+      <HeroScrollIndicator reduceMotion={reduceMotion} />
     </section>
   );
 }

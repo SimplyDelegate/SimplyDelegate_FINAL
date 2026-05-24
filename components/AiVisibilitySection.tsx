@@ -16,7 +16,7 @@ export function AiVisibilitySection() {
           className="ai-copy absolute left-4 top-8 z-20 max-w-[30rem] sm:left-8 sm:top-10 lg:left-[7vw] lg:top-1/2"
         >
           <Badge className="brand-service-badge mb-6 px-5 py-2 text-base font-extrabold uppercase tracking-[0.18em]">
-            AEO & GEO - KI
+            Sichtbar in KI-Antworten
           </Badge>
           <h2
             id="ki-sichtbarkeit-heading"

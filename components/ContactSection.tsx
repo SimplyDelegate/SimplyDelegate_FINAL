@@ -6,16 +6,13 @@ import { useState } from "react";
 
 import { rememberHomeScrollPosition } from "@/lib/historyRestore";
 
-type ContactTopic =
-  | "Suchmaschinen-Sichtbarkeit"
-  | "KI-Sichtbarkeit"
-  | "Webdesign";
+type ContactStep = "domain" | "choice" | "details";
 
 type FormState = {
   name: string;
   domain: string;
   email: string;
-  topics: ContactTopic[];
+  message: string;
 };
 
 type SubmitState = {
@@ -27,17 +24,13 @@ const initialFormState: FormState = {
   name: "",
   domain: "",
   email: "",
-  topics: [],
+  message: "",
 };
-
-const contactTopics: ContactTopic[] = [
-  "Suchmaschinen-Sichtbarkeit",
-  "KI-Sichtbarkeit",
-  "Webdesign",
-];
 
 export function ContactSection() {
   const [form, setForm] = useState<FormState>(initialFormState);
+  const [contactStep, setContactStep] = useState<ContactStep>("domain");
+  const [showMoreInfoQuestion, setShowMoreInfoQuestion] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<SubmitState>({
     tone: "idle",
@@ -45,32 +38,60 @@ export function ContactSection() {
   });
 
   const updateField =
-    (field: "name" | "domain" | "email") =>
-    (event: ChangeEvent<HTMLInputElement>) => {
+    (field: keyof FormState) =>
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((current) => ({ ...current, [field]: event.target.value }));
     };
 
-  const toggleTopic = (topic: ContactTopic) => {
-    setForm((current) => {
-      const isSelected = current.topics.includes(topic);
+  const handleDomainContinue = () => {
+    setStatus({ tone: "idle", message: "" });
 
-      return {
-        ...current,
-        topics: isSelected
-          ? current.topics.filter((currentTopic) => currentTopic !== topic)
-          : [...current.topics, topic],
-      };
-    });
+    if (!form.domain.trim()) {
+      setStatus({
+        tone: "error",
+        message: "Bitte gib deine Domain ein.",
+      });
+      return;
+    }
+
+    setContactStep("choice");
+    setShowMoreInfoQuestion(true);
+  };
+
+  const handleMoreInfoChoice = () => {
+    setStatus({ tone: "idle", message: "" });
+    setContactStep("details");
+    setShowMoreInfoQuestion(false);
+  };
+
+  const handleNoMoreInfoChoice = () => {
+    setStatus({ tone: "idle", message: "" });
+    setShowMoreInfoQuestion(false);
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (contactStep !== "details") {
+      handleDomainContinue();
+      return;
+    }
+
     setStatus({ tone: "idle", message: "" });
 
-    if (!form.topics.length) {
+    if (!form.domain.trim()) {
+      setContactStep("domain");
       setStatus({
         tone: "error",
-        message: "Bitte wähle mindestens ein Thema aus.",
+        message: "Bitte gib deine Domain ein.",
+      });
+      return;
+    }
+
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      setStatus({
+        tone: "error",
+        message: "Bitte fülle alle Felder aus.",
       });
       return;
     }
@@ -79,11 +100,9 @@ export function ContactSection() {
 
     try {
       const message = [
-        form.domain.trim() ? `Domain: ${form.domain.trim()}` : null,
-        `Interesse: ${form.topics.join(", ")}`,
-      ]
-        .filter(Boolean)
-        .join("\n");
+        `Domain: ${form.domain.trim()}`,
+        `Nachricht: ${form.message.trim()}`,
+      ].join("\n");
 
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -105,6 +124,8 @@ export function ContactSection() {
 
       if (response.ok) {
         setForm(initialFormState);
+        setContactStep("domain");
+        setShowMoreInfoQuestion(false);
       }
     } catch {
       setStatus({
@@ -143,86 +164,135 @@ export function ContactSection() {
           </p>
         </div>
 
-        <form className="contact-card" onSubmit={handleSubmit}>
+        <form
+          className={`contact-card contact-card--${contactStep}`}
+          onSubmit={handleSubmit}
+        >
           <div className="contact-card__header">
             <h3>Kontakt aufnehmen</h3>
           </div>
 
-          <div className="contact-field-row">
-            <div className="contact-field">
-              <label htmlFor="contact-name">Name</label>
-              <input
-                id="contact-name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                placeholder="Dein Name"
-                value={form.name}
-                onChange={updateField("name")}
-                required
-              />
-            </div>
+          {contactStep === "domain" ? (
+            <>
+              <div className="contact-field">
+                <label htmlFor="contact-domain">Domain</label>
+                <input
+                  id="contact-domain"
+                  name="domain"
+                  type="text"
+                  autoComplete="url"
+                  placeholder="deine-website.de"
+                  value={form.domain}
+                  onChange={updateField("domain")}
+                  required
+                />
+              </div>
 
-            <div className="contact-field">
-              <label htmlFor="contact-domain">Domain</label>
-              <input
-                id="contact-domain"
-                name="domain"
-                type="text"
-                autoComplete="url"
-                placeholder="deine-website.de"
-                value={form.domain}
-                onChange={updateField("domain")}
-              />
-            </div>
-          </div>
+              <button className="contact-submit" type="submit">
+                <span>Domain prüfen</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="contact-phase-message">
+                Wir werden uns so schnell wie möglich bei Ihnen melden.
+              </p>
 
-          <div className="contact-field">
-            <label htmlFor="contact-email">E-Mail</label>
-            <input
-              id="contact-email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="dein.name@firma.de"
-              value={form.email}
-              onChange={updateField("email")}
-              required
-            />
-          </div>
+              {showMoreInfoQuestion ? (
+                <div className="contact-choice" aria-live="polite">
+                  <p>Möchten Sie uns noch mehr Informationen geben?</p>
+                  <div className="contact-choice__actions">
+                    <button
+                      className="contact-choice__button"
+                      type="button"
+                      onClick={handleMoreInfoChoice}
+                    >
+                      Ja gerne
+                    </button>
+                    <button
+                      className="contact-choice__button contact-choice__button--secondary"
+                      type="button"
+                      onClick={handleNoMoreInfoChoice}
+                    >
+                      Nein danke
+                    </button>
+                  </div>
+                </div>
+              ) : null}
 
-          <fieldset className="contact-field contact-topic-field">
-            <legend>Wobei dürfen wir helfen?</legend>
-            <div className="contact-topic-options">
-              {contactTopics.map((topic) => {
-                const isSelected = form.topics.includes(topic);
+              {contactStep === "details" ? (
+                <>
+                  <div className="contact-field">
+                    <label htmlFor="contact-domain">Domain</label>
+                    <input
+                      id="contact-domain"
+                      name="domain"
+                      type="text"
+                      autoComplete="url"
+                      placeholder="deine-website.de"
+                      value={form.domain}
+                      onChange={updateField("domain")}
+                      required
+                    />
+                  </div>
 
-                return (
+                  <div className="contact-field">
+                    <label htmlFor="contact-name">Name</label>
+                    <input
+                      id="contact-name"
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      placeholder="Dein Name"
+                      value={form.name}
+                      onChange={updateField("name")}
+                      required
+                    />
+                  </div>
+
+                  <div className="contact-field">
+                    <label htmlFor="contact-email">E-Mail</label>
+                    <input
+                      id="contact-email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      placeholder="dein.name@firma.de"
+                      value={form.email}
+                      onChange={updateField("email")}
+                      required
+                    />
+                  </div>
+
+                  <div className="contact-field">
+                    <label htmlFor="contact-message">
+                      Mehr Informationen / Nachricht
+                    </label>
+                    <textarea
+                      id="contact-message"
+                      name="message"
+                      placeholder="Was sollten wir über dein Anliegen wissen?"
+                      value={form.message}
+                      onChange={updateField("message")}
+                      required
+                    />
+                  </div>
+
                   <button
-                    className={`contact-topic-button ${
-                      isSelected ? "contact-topic-button--selected" : ""
-                    }`}
-                    type="button"
-                    aria-pressed={isSelected}
-                    key={topic}
-                    onClick={() => toggleTopic(topic)}
+                    className="contact-submit"
+                    type="submit"
+                    disabled={isSubmitting}
                   >
-                    {topic}
+                    <span>
+                      {isSubmitting ? "Wird vorbereitet..." : "Nachricht senden"}
+                    </span>
+                    <span aria-hidden="true">→</span>
                   </button>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <button className="contact-submit" type="submit" disabled={isSubmitting}>
-            <span>{isSubmitting ? "Wird vorbereitet..." : "Nachricht senden"}</span>
-            <span aria-hidden="true">→</span>
-          </button>
-
-          <p className="contact-card__note">
-            Wir melden uns persönlich zurück. Keine automatisierten Sales-Mails,
-            kein Druck.
-          </p>
+                </>
+              ) : null}
+            </>
+          )}
 
           {status.message ? (
             <p className={`contact-status contact-status--${status.tone}`}>
