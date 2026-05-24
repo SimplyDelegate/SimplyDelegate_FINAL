@@ -145,7 +145,9 @@ function SearchResult({
           </div>
         </div>
 
-        <div className="rank-chip">Platz {rank}</div>
+        <div className={`rank-chip ${item.featured ? "rank-chip--featured" : ""}`}>
+          Platz {rank}
+        </div>
       </div>
 
       <div className={`result-body ${item.image ? "has-image" : ""}`}>

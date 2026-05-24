@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LegalFooter } from "@/components/LegalFooter";
 import { StickyNavbar } from "@/components/StickyNavbar";
 
 export const metadata: Metadata = {
@@ -424,6 +425,7 @@ export default function DatenschutzPage() {
         </section>
         </article>
       </main>
+      <LegalFooter />
     </>
   );
 }

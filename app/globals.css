@@ -689,6 +689,19 @@ body {
   margin: 0;
 }
 
+.legal-footer {
+  padding: clamp(1rem, 2.2vw, 1.45rem) 1.25rem clamp(2rem, 4vw, 2.6rem);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(237, 230, 255, 0.2), transparent 28%),
+    radial-gradient(circle at 82% 20%, rgba(71, 191, 255, 0.2), transparent 32%),
+    linear-gradient(135deg, #170839 0%, #2d0d6e 40%, #5c20d7 72%, #35aaf5 100%);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.legal-footer__content {
+  margin-top: 0;
+}
+
 @media (min-width: 768px) {
   .contact-card {
     gap: 0.9rem;
@@ -3419,6 +3432,7 @@ body {
 
 .result-company-wrap {
   display: flex;
+  align-items: center;
   gap: 10px;
   min-width: 0;
 }
@@ -3447,15 +3461,10 @@ body {
 }
 
 .featured-dot {
-  border: 1px solid var(--brand-label-border);
-  background:
-    linear-gradient(135deg, rgba(134, 59, 255, 0.42), rgba(126, 20, 255, 0.16)),
-    var(--brand-label-bg);
-  color: var(--brand-label-text);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.38),
-    0 0 18px var(--brand-label-glow),
-    0 6px 16px var(--brand-label-cyan-glow);
+  border: 1px solid rgba(176, 139, 95, 0.22);
+  background: #d6b68a;
+  color: #2a303a;
+  box-shadow: inset 0 1px 0 rgba(255, 247, 236, 0.32);
 }
 
 .company-meta {
@@ -3486,6 +3495,18 @@ body {
   background: rgba(255, 255, 255, 0.025);
   color: rgba(255, 255, 255, 0.62);
   font-size: 11px;
+}
+
+.rank-chip--featured {
+  border-color: var(--brand-label-border);
+  background:
+    linear-gradient(135deg, rgba(134, 59, 255, 0.42), rgba(126, 20, 255, 0.16)),
+    var(--brand-label-bg);
+  color: var(--brand-label-text);
+  box-shadow:
+    0 0 22px var(--brand-label-glow),
+    0 10px 20px var(--brand-label-cyan-glow);
+  font-weight: 700;
 }
 
 .result-title-row {
