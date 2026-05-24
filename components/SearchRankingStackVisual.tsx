@@ -65,10 +65,10 @@ const BASE_RESULTS: ResultItem[] = [
   },
   {
     id: "your-site",
-    company: "Ihre Webseite",
+    company: "IHRE WEBSITE",
     title:
-      "Ihre Webseite | Exklusive Vermarktung, starke Präsentation und persönliche Beratung",
-    url: "https://ihre-webseite.de",
+      "IHRE WEBSITE | Exklusive Vermarktung, starke Präsentation und persönliche Beratung",
+    url: "https://ihre-website.de",
     desc: "Exklusive Immobilienvermarktung für Bremen und Umgebung: hochwertige Objektpräsentation, geprüfte Interessenten, fundierte Marktkenntnis und persönliche Begleitung bis zum Notartermin.",
     rating: "5,0",
     reviews: "247 Google-Bewertungen",
@@ -147,9 +147,6 @@ function SearchResult({
 
         <div className={`rank-chip ${item.featured ? "rank-chip--featured" : ""}`}>
           Platz {rank}
-        <div className="rank-chip" aria-label={`Platz ${rank}`}>
-          <span className="rank-chip__label">Platz</span>
-          <span className="rank-chip__number">{rank}</span>
         </div>
       </div>
 
@@ -201,9 +198,6 @@ function SearchResult({
             <div className="result-thumb">
               <img src={item.image} alt="" />
             </div>
-            {isFeatured ? (
-              <span className="ranking-overtake-arrow" aria-hidden="true" />
-            ) : null}
           </div>
         )}
       </div>

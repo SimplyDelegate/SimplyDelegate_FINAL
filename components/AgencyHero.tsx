@@ -206,7 +206,7 @@ export function AgencyHero() {
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                was ihr Unternehmen kann.
+                was Ihr Unternehmen kann.
               </motion.span>
             </h1>
 
@@ -273,12 +273,12 @@ export function AgencyHero() {
             transition={{ duration: 0.6, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
           >
             <div
-              className={`group overflow-hidden rounded-[1.85rem] border bg-[linear-gradient(135deg,rgba(255,255,255,0.86),rgba(251,249,255,0.72)_48%,rgba(244,250,255,0.62))] p-[0.32rem] shadow-[0_18px_42px_rgba(42,34,76,0.1),0_1px_10px_rgba(255,255,255,0.66)_inset,0_0_34px_rgba(126,20,255,0.055)] backdrop-blur-lg transition duration-300 focus-within:bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(251,249,255,0.8)_48%,rgba(244,250,255,0.68))] focus-within:shadow-[0_20px_48px_rgba(42,34,76,0.12),0_1px_10px_rgba(255,255,255,0.68)_inset,0_0_22px_rgba(126,20,255,0.08)] lg:rounded-l-[0.42rem] lg:rounded-r-[1.85rem] ${
+              className={`group overflow-hidden rounded-[1.85rem] border bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(251,249,255,0.84)_48%,rgba(244,250,255,0.78))] p-[0.32rem] shadow-[0_10px_22px_rgba(42,34,76,0.09),0_0_0_1px_rgba(255,255,255,0.74)_inset] transition duration-300 focus-within:bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(251,249,255,0.88)_48%,rgba(244,250,255,0.82))] focus-within:shadow-[0_12px_24px_rgba(42,34,76,0.1),0_0_0_1px_rgba(255,255,255,0.78)_inset] lg:rounded-l-[0.42rem] lg:rounded-r-[1.85rem] ${
                 domainError ? "border-[#b94a6a]/70" : "border-[#d8d1ec]"
               }`}
             >
               <div className="flex flex-col lg:flex-row lg:items-stretch">
-                <div className="lg:-my-[0.32rem] lg:-ml-[0.32rem] lg:flex lg:w-[26.5rem] lg:shrink-0 lg:items-center lg:rounded-l-[0.42rem] lg:rounded-r-[1.85rem] lg:bg-[rgba(160,68,255,0.94)] lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.34),inset_-1px_0_0_rgba(237,230,255,0.34),inset_0_-14px_24px_rgba(73,31,170,0.1),12px_0_30px_rgba(126,20,255,0.13)] lg:backdrop-blur-sm">
+                <div className="lg:-my-[0.32rem] lg:-ml-[0.32rem] lg:flex lg:w-[26.5rem] lg:shrink-0 lg:items-center lg:rounded-l-[0.42rem] lg:rounded-r-[1.85rem] lg:bg-[rgba(160,68,255,0.98)] lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.34),inset_-1px_0_0_rgba(237,230,255,0.34),inset_0_-10px_18px_rgba(73,31,170,0.08),8px_0_16px_rgba(126,20,255,0.08)]">
                   <div className="px-5 pb-4 pt-4 lg:flex lg:w-full lg:items-center lg:justify-between lg:gap-4 lg:px-7 lg:pb-0 lg:pt-0">
                     <p className="w-max text-left text-[clamp(1rem,0.84vw,1.08rem)] font-semibold leading-[1.34] tracking-normal text-[#12131c] lg:text-[1.08rem] lg:font-bold lg:leading-[1.3] lg:text-[#f2f0f3]">
                       <span className="block whitespace-nowrap">
@@ -330,7 +330,7 @@ export function AgencyHero() {
 
                   <button
                     aria-label="Finden wir es heraus"
-                    className="group/cta relative inline-flex min-h-[3.2rem] shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/12 bg-[linear-gradient(180deg,rgba(24,26,37,0.97)_0%,rgba(16,18,26,0.94)_100%)] px-5 text-center text-[#f2f0f3] shadow-[0_8px_18px_rgba(17,19,29,0.12),0_0_14px_rgba(126,20,255,0.08),inset_0_1px_0_rgba(255,255,255,0.21)] backdrop-blur-sm transition duration-300 hover:-translate-y-px hover:bg-[linear-gradient(180deg,rgba(32,35,50,0.98)_0%,rgba(18,21,33,0.95)_100%)] hover:shadow-[0_12px_24px_rgba(17,19,29,0.17),0_0_22px_rgba(126,20,255,0.15),inset_0_1px_0_rgba(255,255,255,0.25)] focus:outline-none focus:ring-4 focus:ring-[#7048ff]/22 max-sm:w-full lg:-my-[0.32rem] lg:-mr-[0.32rem] lg:ml-[0.72rem] lg:min-h-0 lg:w-[11.5rem] lg:rounded-l-[0.42rem] lg:rounded-r-[1.85rem] lg:px-4"
+                    className="group/cta relative inline-flex min-h-[3.2rem] shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/16 bg-[linear-gradient(180deg,rgba(24,26,37,1)_0%,rgba(16,18,26,0.98)_100%)] px-5 text-center text-[#f2f0f3] shadow-[0_7px_14px_rgba(17,19,29,0.14),0_0_0_1px_rgba(7,8,12,0.72),inset_0_1px_0_rgba(255,255,255,0.22)] transition duration-300 hover:-translate-y-px hover:bg-[linear-gradient(180deg,rgba(32,35,50,1)_0%,rgba(18,21,33,0.98)_100%)] hover:shadow-[0_9px_16px_rgba(17,19,29,0.18),0_0_0_1px_rgba(7,8,12,0.78),inset_0_1px_0_rgba(255,255,255,0.25)] focus:outline-none focus:ring-4 focus:ring-[#7048ff]/22 max-sm:w-full lg:-my-[0.32rem] lg:-mr-[0.32rem] lg:ml-[0.72rem] lg:min-h-0 lg:w-[11.5rem] lg:rounded-l-[0.42rem] lg:rounded-r-[1.85rem] lg:px-4"
                     type="submit"
                   >
                     <span className="relative z-10 inline-flex items-center justify-center gap-2 subpixel-antialiased [font-synthesis-weight:none] [text-rendering:geometricPrecision] [text-shadow:none]">
