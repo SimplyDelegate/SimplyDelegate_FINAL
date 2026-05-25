@@ -22,7 +22,7 @@ export default function DatenschutzPage() {
           <h2 id="verantwortlicher-heading">1. Verantwortlicher</h2>
           <p>
             Verantwortlich für die Verarbeitung personenbezogener Daten auf
-            dieser Website ist:
+            dieser Webseite ist:
           </p>
           <address className="legal-address">
             David Kien
@@ -58,8 +58,8 @@ export default function DatenschutzPage() {
           </h2>
           <p>
             Wir verarbeiten personenbezogene Daten nur, soweit dies zur
-            Bereitstellung dieser Website, zur Bearbeitung von Anfragen, zur
-            Terminbuchung oder zur Analyse der Nutzung unserer Website
+            Bereitstellung dieser Webseite, zur Bearbeitung von Anfragen, zur
+            Terminbuchung oder zur Analyse der Nutzung unserer Webseite
             erforderlich ist.
           </p>
           <p>
@@ -72,7 +72,7 @@ export default function DatenschutzPage() {
 
         <section className="legal-section" aria-labelledby="vercel-hosting-heading">
           <h2 id="vercel-hosting-heading">3. Hosting über Vercel</h2>
-          <p>Diese Website wird über Vercel gehostet.</p>
+          <p>Diese Webseite wird über Vercel gehostet.</p>
           <p>Anbieter:</p>
           <address className="legal-address">
             Vercel Inc.
@@ -84,7 +84,7 @@ export default function DatenschutzPage() {
             USA
           </address>
           <p>
-            Beim Aufruf der Website verarbeitet Vercel technische Zugriffsdaten.
+            Beim Aufruf der Webseite verarbeitet Vercel technische Zugriffsdaten.
             Dazu können insbesondere gehören:
           </p>
           <ul className="legal-list">
@@ -98,12 +98,12 @@ export default function DatenschutzPage() {
           </ul>
           <p>
             Die Verarbeitung erfolgt zur sicheren, stabilen und effizienten
-            Bereitstellung der Website.
+            Bereitstellung der Webseite.
           </p>
           <p>
             Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes
             Interesse liegt in der technischen Bereitstellung, Sicherheit und
-            Optimierung der Website.
+            Optimierung der Webseite.
           </p>
           <p>
             Vercel stellt ein Data Processing Addendum bereit; dieses gilt nach
@@ -115,7 +115,7 @@ export default function DatenschutzPage() {
         <section className="legal-section" aria-labelledby="kontaktformular-heading">
           <h2 id="kontaktformular-heading">4. Kontaktformular</h2>
           <p>
-            Auf unserer Website befindet sich ein Kontaktformular. Wenn du uns
+            Auf unserer Webseite befindet sich ein Kontaktformular. Wenn du uns
             über das Formular kontaktierst, verarbeiten wir die von dir
             eingegebenen Daten.
           </p>
@@ -227,7 +227,7 @@ export default function DatenschutzPage() {
         <section className="legal-section" aria-labelledby="vercel-analytics-heading">
           <h2 id="vercel-analytics-heading">7. Vercel Analytics</h2>
           <p>
-            Wir nutzen Vercel Web Analytics, um die Nutzung unserer Website
+            Wir nutzen Vercel Web Analytics, um die Nutzung unserer Webseite
             statistisch auszuwerten.
           </p>
           <p>
@@ -246,11 +246,11 @@ export default function DatenschutzPage() {
             <li>ungefährer Standort</li>
             <li>technische Zugriffsdaten</li>
           </ul>
-          <p>Zweck der Verarbeitung ist die Analyse und Verbesserung der Website.</p>
+          <p>Zweck der Verarbeitung ist die Analyse und Verbesserung der Webseite.</p>
           <p>
             Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes
             Interesse liegt in der statistischen Auswertung und Optimierung
-            unserer Website.
+            unserer Webseite.
           </p>
           <p>
             Da Vercel Analytics nach Anbieterangaben ohne Cookies arbeitet, ist
@@ -262,7 +262,7 @@ export default function DatenschutzPage() {
 
         <section className="legal-section" aria-labelledby="calendly-heading">
           <h2 id="calendly-heading">8. Terminbuchung über Calendly</h2>
-          <p>Auf unserer Website ist Calendly zur Terminbuchung eingebunden.</p>
+          <p>Auf unserer Webseite ist Calendly zur Terminbuchung eingebunden.</p>
           <p>Anbieter:</p>
           <address className="legal-address">
             Calendly, LLC
@@ -300,19 +300,19 @@ export default function DatenschutzPage() {
         <section className="legal-section" aria-labelledby="cookies-heading">
           <h2 id="cookies-heading">9. Cookies und Einwilligungsverwaltung</h2>
           <p>
-            Unsere Website kann technisch notwendige Cookies oder vergleichbare
-            Technologien verwenden. Diese sind erforderlich, damit die Website
+            Unsere Webseite kann technisch notwendige Cookies oder vergleichbare
+            Technologien verwenden. Diese sind erforderlich, damit die Webseite
             technisch funktioniert.
           </p>
           <p>Für technisch notwendige Cookies ist keine Einwilligung erforderlich.</p>
           <p>
             Calendly setzt nach eigener Dokumentation Cookies bei eingebetteten
             Kalendern. Calendly zeigt bei Embeds standardmäßig ein Cookie-Banner.
-            Wenn dieses Banner ausgeblendet wird, muss die Website selbst die
+            Wenn dieses Banner ausgeblendet wird, muss die Webseite selbst die
             Cookie-Präferenzen verwalten und Calendly erst nach Zustimmung laden.
           </p>
           <p>
-            Daher sollte Calendly auf dieser Website erst nach aktiver Zustimmung
+            Daher sollte Calendly auf dieser Webseite erst nach aktiver Zustimmung
             des Nutzers geladen werden.
           </p>
           <p>Empfohlener Hinweis vor dem Laden von Calendly:</p>
@@ -350,11 +350,11 @@ export default function DatenschutzPage() {
         <section className="legal-section" aria-labelledby="empfaenger-heading">
           <h2 id="empfaenger-heading">11. Empfänger personenbezogener Daten</h2>
           <p>
-            Im Rahmen des Betriebs dieser Website können personenbezogene Daten
+            Im Rahmen des Betriebs dieser Webseite können personenbezogene Daten
             an folgende Dienstleister übermittelt werden:
           </p>
           <ul className="legal-list">
-            <li>Vercel, Hosting und Website-Bereitstellung</li>
+            <li>Vercel, Hosting und Webseite-Bereitstellung</li>
             <li>
               Google Workspace / Google Sheets, Speicherung und Bearbeitung von
               Kontaktanfragen

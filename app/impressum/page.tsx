@@ -55,7 +55,7 @@ export default function ImpressumPage() {
         </section>
 
         <section className="legal-section" aria-labelledby="website-heading">
-          <h2 id="website-heading">Website</h2>
+          <h2 id="website-heading">Webseite</h2>
           <p>
             <a href="https://simplydelegate.de">https://simplydelegate.de</a>
           </p>

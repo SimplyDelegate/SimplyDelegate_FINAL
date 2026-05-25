@@ -313,7 +313,7 @@ export function WebdesignSection() {
               className="max-w-[15ch] text-[2.85rem] font-medium leading-[0.92] text-[#07080f] sm:text-[4rem] lg:text-[4.25rem] 2xl:text-[5.15rem]"
             >
               <span className="block whitespace-nowrap">Ihre</span>
-              <span className="block whitespace-nowrap">Website</span>
+              <span className="block whitespace-nowrap">Webseite</span>
               <span className="block whitespace-nowrap">entscheidet,</span>
               <span className="block whitespace-nowrap">ob Sichtbarkeit</span>
               <span className="block whitespace-nowrap">zu Umsatz wird</span>
@@ -323,7 +323,7 @@ export function WebdesignSection() {
                 href={ctaHref}
                 variant="animatedDark"
               >
-                Website auf Anfragen prüfen
+                Webseite auf Anfragen prüfen
               </AgencyButton>
             </div>
           </div>
@@ -331,7 +331,7 @@ export function WebdesignSection() {
 
         <div className="webdesign-stage-shell" ref={stageRef}>
           <div className="webdesign-stage-note" aria-hidden="true">
-            So k&#246;nnte Ihre Website aussehen
+            So k&#246;nnte Ihre Webseite aussehen
           </div>
 
           <div className="webdesign-video-stage">

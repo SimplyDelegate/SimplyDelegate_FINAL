@@ -226,7 +226,7 @@ export function ContactSection() {
       className={`contact-section contact-section--${contactStep}`}
       aria-label={
         contactStep === "details"
-          ? "Weitere Informationen zur Website-Prüfung"
+          ? "Weitere Informationen zur Webseite-Prüfung"
           : undefined
       }
       aria-labelledby={
@@ -247,7 +247,7 @@ export function ContactSection() {
               <span>oder Ihre Konkurrenz?</span>
             </h2>
             <p>
-              Wir prüfen Ihre Website und zeigen Ihnen, wo Sie online sichtbar
+              Wir prüfen Ihre Webseite und zeigen Ihnen, wo Sie online sichtbar
               sind, wo Vertrauen verloren geht und wo mehr Anfragen möglich
               wären.
             </p>
@@ -260,7 +260,7 @@ export function ContactSection() {
         >
           {contactStep === "domain" ? (
             <div className="contact-card__header">
-              <h3>Ihre Website prüfen</h3>
+              <h3>Ihre Webseite prüfen</h3>
             </div>
           ) : null}
 
@@ -271,7 +271,7 @@ export function ContactSection() {
                   id="contact-domain"
                   name="domain"
                   type="text"
-                  aria-label="Website Adresse"
+                  aria-label="Webseite Adresse"
                   autoComplete="url"
                   placeholder="ihre-website.de"
                   value={form.domain}
@@ -305,7 +305,7 @@ export function ContactSection() {
                     </svg>
                   </span>
                   <p>
-                    Alles klar, wir haben Ihre Website-Domain erhalten und
+                    Alles klar, wir haben Ihre Webseite-Domain erhalten und
                     melden uns innerhalb von 24 Stunden bei Ihnen.
                   </p>
                 </div>
@@ -313,7 +313,7 @@ export function ContactSection() {
                 <p className="contact-phase-message">
                   {contactStep === "details" ? (
                   <>
-                    <span>Wir haben Ihre Website-Domain erhalten</span>
+                    <span>Wir haben Ihre Webseite-Domain erhalten</span>
                     <span>
                       und melden uns innerhalb von 24 Stunden bei Ihnen.
                     </span>
@@ -324,7 +324,7 @@ export function ContactSection() {
                   </>
                   ) : (
                   <>
-                    <span>Wir haben Ihre Website-Domain erhalten</span>
+                    <span>Wir haben Ihre Webseite-Domain erhalten</span>
                     <span>
                       und melden uns innerhalb von 24 Stunden bei Ihnen.
                     </span>
@@ -357,20 +357,6 @@ export function ContactSection() {
 
               {contactStep === "details" ? (
                 <>
-                  <div className="contact-field">
-                    <input
-                      id="contact-domain"
-                      name="domain"
-                      type="text"
-                      aria-label="Website Adresse"
-                      autoComplete="url"
-                      placeholder="ihre-website.de"
-                      value={form.domain}
-                      onChange={updateField("domain")}
-                      required
-                    />
-                  </div>
-
                   <div className="contact-field">
                     <label htmlFor="contact-name">Name</label>
                     <input

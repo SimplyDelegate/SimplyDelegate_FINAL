@@ -732,16 +732,17 @@ body {
 
 .contact-choice__button {
   min-height: 3rem;
-  border: 1px solid rgba(255, 255, 255, 0.34);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 8px;
-  background: #f2f0f3;
-  color: #02030a;
+  background: #05060a;
+  color: #ffffff;
   font: inherit;
   font-size: 1rem;
   font-weight: 650;
   line-height: 1.1;
   text-rendering: geometricPrecision;
-  -webkit-font-smoothing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-synthesis-weight: none;
   letter-spacing: 0;
   cursor: pointer;
@@ -755,8 +756,8 @@ body {
 }
 
 .contact-choice__button:hover {
-  background: #ffffff;
-  box-shadow: 0 16px 32px rgba(5, 3, 18, 0.2);
+  background: #0c0e14;
+  box-shadow: 0 16px 32px rgba(5, 3, 18, 0.24);
   transform: translateY(-1px);
 }
 
@@ -805,7 +806,7 @@ body {
 
 .contact-field textarea {
   min-height: clamp(7.1rem, 15vh, 8.6rem);
-  resize: vertical;
+  resize: none;
   padding: 1rem 1.05rem;
 }
 
@@ -889,6 +890,7 @@ body {
 }
 
 .contact-submit {
+  position: relative;
   display: inline-flex;
   min-height: clamp(3.35rem, 6vh, 3.75rem);
   align-items: center;
@@ -920,14 +922,18 @@ body {
   justify-content: center;
   gap: 0.7rem;
   margin-top: 0.45rem;
+  border-color: rgba(255, 255, 255, 0.18);
   border-radius: 8px;
+  background: #05060a;
   padding: 0 1.15rem;
+  color: #ffffff;
   font-size: 1rem;
   font-weight: 650;
   line-height: 1.1;
   letter-spacing: 0;
   text-rendering: geometricPrecision;
-  -webkit-font-smoothing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-synthesis-weight: none;
 }
 
@@ -942,6 +948,11 @@ body {
   stroke-width: 2;
   transform: translateY(1px);
   transition: transform 220ms ease;
+}
+
+.contact-submit--visibility-check:hover:not(:disabled) {
+  background: #0c0e14;
+  box-shadow: 0 18px 38px rgba(5, 3, 18, 0.26);
 }
 
 .contact-submit--visibility-check:hover:not(:disabled) svg {
@@ -1406,7 +1417,8 @@ body {
   line-height: 1.1;
   letter-spacing: 0;
   text-rendering: geometricPrecision;
-  -webkit-font-smoothing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-synthesis-weight: none;
 }
 

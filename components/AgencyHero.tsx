@@ -155,7 +155,7 @@ export function AgencyHero() {
     const trimmedDomain = domain.trim();
 
     if (!trimmedDomain) {
-      setDomainError("Bitte geben Sie Ihre Website ein.");
+      setDomainError("Bitte geben Sie Ihre Webseite ein.");
       return;
     }
 
@@ -314,7 +314,7 @@ export function AgencyHero() {
                       <GlobeIcon className="block h-4 w-4 translate-x-px" />
                     </span>
                     <label className="sr-only" htmlFor="hero-domain-input">
-                      Website für die Sichtbarkeitsprüfung
+                      Webseite für die Sichtbarkeitsprüfung
                     </label>
                     <input
                       id="hero-domain-input"
